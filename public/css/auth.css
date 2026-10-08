@@ -1,0 +1,336 @@
+/* ==============================
+   AUTH PAGES (SIGN IN / SIGN UP)
+================================= */
+
+.auth-wrapper {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 140px 5% 60px;
+
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+        url("../images/hero.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+
+    background-color: #111;
+    border: 1px solid #2a2a2a;
+
+    padding: 45px 40px;
+}
+
+.auth-subtitle {
+    color: var(--color-champagne);
+
+    font-size: 12px;
+    letter-spacing: 4px;
+
+    margin-bottom: 12px;
+
+    text-align: center;
+}
+
+.auth-card h1 {
+    font-size: 30px;
+
+    text-align: center;
+
+    margin-bottom: 35px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group label {
+    display: block;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #999;
+
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    background-color: #0b0b0b;
+    border: 1px solid #2a2a2a;
+    color: white;
+
+    font-size: 14px;
+    font-family: inherit;
+
+    transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-champagne);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.auth-submit {
+    width: 100%;
+
+    padding: 14px;
+
+    background-color: var(--color-champagne);
+    color: #000;
+
+    border: none;
+
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    margin-top: 10px;
+}
+
+.auth-submit:hover {
+    background-color: white;
+}
+
+.auth-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-switch {
+    text-align: center;
+
+    margin-top: 25px;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+.auth-switch a {
+    color: var(--color-champagne);
+    font-weight: bold;
+}
+
+.auth-switch a:hover {
+    color: white;
+}
+
+.form-message {
+    padding: 12px 14px;
+
+    margin-bottom: 20px;
+
+    font-size: 13px;
+
+    display: none;
+}
+
+.form-message.error {
+    display: block;
+    background-color: rgba(200, 40, 40, 0.15);
+    border: 1px solid #a83232;
+    color: #ff8a8a;
+}
+
+.form-message.success {
+    display: block;
+    background-color: rgba(40, 160, 90, 0.15);
+    border: 1px solid #2f9e5f;
+    color: #8affb3;
+}
+
+@media (max-width: 600px) {
+    .auth-card {
+        padding: 35px 25px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==============================
+   FORGOT PASSWORD
+================================= */
+
+.forgot-link {
+    text-align: center;
+    margin-top: 18px;
+
+    font-size: 13px;
+}
+
+.forgot-link a {
+    color: #999;
+    transition: color 0.3s;
+}
+
+.forgot-link a:hover {
+    color: var(--color-champagne);
+}
+
+
+/* --- Modal --- */
+.forgot-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.forgot-modal.hidden {
+    display: none;
+}
+
+.forgot-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.80);
+
+    backdrop-filter: blur(4px);
+}
+
+.forgot-modal-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 440px;
+
+    margin: 0 20px;
+
+    background-color: #111;
+    border: 1px solid #2a2a2a;
+
+    padding: 45px 40px;
+
+    z-index: 1;
+
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.forgot-modal-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+
+    background: none;
+    border: none;
+
+    color: #888;
+    font-size: 20px;
+
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.forgot-modal-close:hover {
+    color: white;
+}
+
+.forgot-modal-subtitle {
+    color: var(--color-champagne);
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.forgot-modal-content h2 {
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.forgot-error-msg {
+    margin-top: 14px;
+    padding: 10px 14px;
+    font-size: 13px;
+
+    background-color: rgba(200, 40, 40, 0.15);
+    border: 1px solid #a83232;
+    color: #ff8a8a;
+}
+
+.forgot-error-msg.hidden {
+    display: none;
+}
+
+.forgot-success-msg {
+    margin-top: 14px;
+    padding: 10px 14px;
+    font-size: 13px;
+
+    background-color: rgba(40, 160, 90, 0.15);
+    border: 1px solid #2f9e5f;
+    color: #8affb3;
+}
+
+.forgot-success-msg.hidden {
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .forgot-modal-content {
+        padding: 35px 25px;
+        margin: 0 15px;
+    }
+}
+

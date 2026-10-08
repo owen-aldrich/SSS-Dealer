@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koleksi Mobil | SSS+Dealer</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/home.css?v=5">
+    <link rel="stylesheet" href="css/cars-page.css?v=2">
+</head>
+
+<body class="home">
+
+    <!-- ============ NAVBAR ============ -->
+    <header>
+        <nav class="site-nav">
+            <a href="index.html" class="brand-word">SSS<span class="plus">+</span><span class="suffix">Dealer</span></a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="cars.html" class="active">Koleksi</a></li>
+                <li><a href="compare.html">Bandingkan</a></li>
+                <li><a href="account.html">Favorit</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="https://wa.me/622150881900" target="_blank" rel="noopener" class="btn btn-outline">
+                    Pesan test drive
+                    <img src="images/icons/arrow-up-right.svg" alt="">
+                </a>
+                <a href="signin.html" class="btn btn-outline nav-account-link">
+                    <img src="images/icons/user-round.svg" alt="">
+                    Akun
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="catalog">
+
+            <!-- Page intro -->
+            <div class="catalog-intro">
+                <p class="overline" id="catalogOverline">KOLEKSI / MOBIL PILIHAN</p>
+                <h1>Temukan karakter Anda.</h1>
+                <p class="lead">
+                    Dari presisi sport hingga kenyamanan luxury. Harga yang ditampilkan
+                    bersifat indikatif. Konsultasikan penawaran dan proses pembelian
+                    dengan konsultan kami via WhatsApp.
+                </p>
+            </div>
+
+            <!-- Search -->
+            <div class="catalog-search">
+                <img src="images/icons/search.svg" alt="">
+                <input type="text" id="searchInput" placeholder="Cari merek, model, atau karakter mobil...">
+            </div>
+
+            <!-- Explore: sidebar + results -->
+            <div class="catalog-explore">
+
+                <!-- Sidebar filters -->
+                <aside class="filter-panel">
+                    <div class="filter-head">
+                        <span class="ftitle">Filter koleksi</span>
+                        <button type="button" class="freset" id="resetFilters">Reset</button>
+                    </div>
+                    <hr class="hr-hair">
+
+                    <p class="fgroup-label">Merek</p>
+                    <div id="filterBrandList"><!-- checkbox merek via JS --></div>
+
+                    <hr class="hr-hair">
+
+                    <p class="fgroup-label">Rentang harga</p>
+                    <div class="price-field">
+                        <label for="priceMin">Harga minimum</label>
+                        <input type="text" id="priceMin" inputmode="numeric" placeholder="Rp 0">
+                    </div>
+                    <div class="price-field">
+                        <label for="priceMax">Harga maksimum</label>
+                        <input type="text" id="priceMax" inputmode="numeric" placeholder="Rp 8.000.000.000">
+                    </div>
+
+                    <hr class="hr-hair">
+
+                    <p class="fgroup-label">Tipe bodi</p>
+                    <div id="filterTypeList"><!-- checkbox tipe via JS --></div>
+
+                    <hr class="hr-hair">
+
+                    <p class="filter-note">
+                        Seluruh harga merupakan harga indikatif OTR Jakarta. Proses
+                        pembelian dilakukan via chat WhatsApp dengan konsultan kami.
+                        Silakan hubungi konsultan untuk penawaran terbaru, ketersediaan,
+                        dan informasi pembelian.
+                    </p>
+                </aside>
+
+                <!-- Results -->
+                <div class="results">
+                    <div class="results-bar">
+                        <p class="results-count" id="resultsCount">Menampilkan 0 mobil</p>
+                        <div class="sort-control">
+                            <select id="sortBy">
+                                <option value="default">Urutkan: Pilihan kurator</option>
+                                <option value="price-asc">Harga: Terendah → Tertinggi</option>
+                                <option value="price-desc">Harga: Tertinggi → Terendah</option>
+                                <option value="hp-desc">Tenaga: Tertinggi</option>
+                                <option value="name-asc">Nama: A → Z</option>
+                                <option value="brand-asc">Merek: A → Z</option>
+                            </select>
+                            <img src="images/icons/chevron-down.svg" alt="">
+                        </div>
+                    </div>
+
+                    <div class="results-grid" id="carsGrid"></div>
+
+                    <p id="noResults" class="no-results" style="display:none;">
+                        Tidak ada mobil yang cocok dengan filter Anda. Coba sesuaikan pencarian.
+                    </p>
+
+                    <!-- Compare tray -->
+                    <div class="compare-tray" id="compareTray" style="display:none;">
+                        <div class="tray-info">
+                            <span class="tray-count" id="trayCount">0 mobil siap dibandingkan</span>
+                            <span class="tray-names" id="trayNames"></span>
+                        </div>
+                        <a href="compare.html" class="btn btn-primary">
+                            Bandingkan mobil
+                            <img src="images/icons/columns-3.svg" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <p class="f-word">SSS+Dealer</p>
+                <p>Performa pilihan. Pengalaman personal. Temukan mobil yang mencerminkan diri Anda.</p>
+                <p class="overline">JAKARTA · INDONESIA</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Jelajahi</p>
+                <a href="cars.html">Koleksi mobil</a>
+                <a href="compare.html">Bandingkan mobil</a>
+                <a href="account.html">Favorit saya</a>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Layanan</p>
+                <a href="cars.html">Test drive</a>
+                <p>Konsultasi pembelian</p>
+                <p>Pembiayaan</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Hubungi kami</p>
+                <p>+62 21 5088 1900</p>
+                <p>concierge@sssdealer.id</p>
+                <p>Senin–Sabtu, 09.00–18.00</p>
+            </div>
+        </div>
+        <hr class="hr-hair">
+        <div class="footer-legal">
+            <p>© 2026 SSS+Dealer. Seluruh hak dilindungi.</p>
+            <p>Privasi · Syarat &amp; ketentuan · Instagram</p>
+        </div>
+    </footer>
+
+    <script src="js/nav-auth.js?v=5"></script>
+    <script src="js/favorites.js?v=1"></script>
+    <script src="js/cars-filter.js?v=5"></script>
+
+</body>
+
+</html>

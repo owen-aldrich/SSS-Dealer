@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign In | SSS+Dealer</title>
+
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/home.css?v=5">
+    <link rel="stylesheet" href="css/auth.css?v=4">
+</head>
+
+<body class="home">
+
+    <header>
+        <nav class="site-nav">
+            <a href="index.html" class="brand-word">SSS<span class="plus">+</span><span class="suffix">Dealer</span></a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="cars.html">Koleksi</a></li>
+                <li><a href="compare.html">Bandingkan</a></li>
+                <li><a href="account.html">Favorit</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="signin.html" class="btn btn-outline nav-account-link">
+                    <img src="images/icons/user-round.svg" alt="">
+                    Akun
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <p class="auth-subtitle">SELAMAT DATANG KEMBALI</p>
+                <h1>Masuk</h1>
+
+                <div id="formMessage" class="form-message"></div>
+
+                <form id="signinForm">
+
+                    <div class="form-group">
+                        <label for="identifier">EMAIL ATAU USERNAME</label>
+                        <input type="text" id="identifier" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">KATA SANDI</label>
+                        <input type="password" id="password" required>
+                    </div>
+
+                    <button type="submit" class="auth-submit">MASUK</button>
+
+                </form>
+
+                <p class="forgot-link">
+                    <a href="#" id="openForgotModal">Lupa kata sandi?</a>
+                </p>
+
+                <p class="auth-switch">
+                    Belum punya akun? <a href="signup.html">Daftar di sini</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==============================
+         FORGOT PASSWORD MODAL
+    ================================= -->
+    <div id="forgotModal" class="forgot-modal hidden">
+        <div class="forgot-modal-overlay" id="forgotOverlay"></div>
+        <div class="forgot-modal-content">
+            <button id="closeModal" class="forgot-modal-close">✕</button>
+
+            <p class="forgot-modal-subtitle">PEMULIHAN AKUN</p>
+            <h2>Atur Ulang Kata Sandi</h2>
+
+            <p style="color:var(--color-muted); font-size:13px; line-height:1.6; margin-bottom:24px; text-align:center;">
+                Masukkan alamat email Anda dan kami akan mengirim tautan untuk mengatur ulang kata sandi.
+            </p>
+
+            <div id="stepSend">
+                <div class="form-group">
+                    <label for="forgotEmail">ALAMAT EMAIL</label>
+                    <input type="email" id="forgotEmail" placeholder="email@anda.com">
+                </div>
+                <button id="btnSendReset" class="auth-submit">Kirim Tautan</button>
+                <p id="sendError" class="forgot-error-msg hidden"></p>
+                <p id="sendSuccess" class="forgot-success-msg hidden">
+                    ✓ Tautan terkirim! Periksa email Anda (termasuk folder spam).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js?v=4"></script>
+    <script src="js/forgot-password.js?v=4"></script>
+    <script src="js/nav-auth.js?v=4"></script>
+
+</body>
+
+</html>
+

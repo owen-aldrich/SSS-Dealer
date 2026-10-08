@@ -1,0 +1,699 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap");
+
+/* ==============================
+   DESIGN TOKENS — SSS+Dealer
+   Sumber: Figma UI/UX Kit (file FmTWFrfaa0u61EXqzUrVhk)
+   Charcoal + champagne, Lora x Inter. Kedalaman lewat
+   surface, tanpa drop shadow.
+================================= */
+
+:root {
+    /* Warna — latar & permukaan */
+    --color-canvas: #111315;   /* Latar utama */
+    --color-surface: #1B1E21;  /* Kartu / blok konten */
+    --color-raised: #24282B;   /* Tray / header tabel */
+    --color-border: #363A3D;   /* Garis pembatas */
+
+    /* Warna — aksen & teks */
+    --color-champagne: #C3AB84;        /* CTA / pilihan aktif */
+    --color-champagne-hover: #D1BC99;  /* Hover state */
+    --color-disabled: #66686E;         /* Disabled state */
+    --color-ivory: #F1EEE8;            /* Teks utama */
+    --color-muted: #A5A7A8;            /* Teks pendukung */
+    --color-success: #B8C7B6;          /* Status terkonfirmasi */
+    --color-error: #D6A09A;            /* Error validasi */
+
+    /* Tipografi — font family */
+    --font-serif: "Lora", Georgia, "Times New Roman", serif;
+    --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+
+    /* Tipografi — skala (desktop) */
+    --fs-display: 76px;    /* Lora 400, LH 87.4px */
+    --fs-heading: 52px;    /* Lora 400 — heading halaman */
+    --fs-section: 44px;    /* Lora 400 — heading bagian */
+    --fs-card: 27px;       /* Lora 400 — heading kartu */
+    --fs-body: 18px;       /* Inter 400, LH 25.8px */
+    --fs-ui: 13px;         /* Inter 600 — tombol */
+    --fs-label: 11px;      /* Inter 600, LS +2px — overline */
+
+    /* Spacing scale */
+    --sp-8: 8px;
+    --sp-12: 12px;
+    --sp-16: 16px;
+    --sp-24: 24px;
+    --sp-32: 32px;
+    --sp-40: 40px;
+    --sp-48: 48px;
+    --sp-72: 72px;
+    --sp-80: 80px;
+
+    /* Radius & border */
+    --radius-control: 4px;   /* Tombol, input */
+    --radius-card: 6px;      /* Kartu mobil */
+    --radius-tray: 0px;      /* Tray / tabel */
+    --radius-pill: 100px;    /* Favorit / status */
+    --border-hair: 1px solid var(--color-border);
+
+    /* Layout */
+    --layout-max: 1296px;    /* Konten (1440 - 72*2) */
+    --layout-margin: 72px;
+}
+
+/* ==============================
+   RESET
+================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    background-color: var(--color-canvas);
+    color: var(--color-ivory);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* ==============================
+   NAVBAR
+================================= */
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.navbar {
+    width: 90%;
+    max-width: 1400px;
+    margin: auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 30px 0;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: var(--color-champagne);
+}
+
+.nav-links {
+    list-style: none;
+
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--color-champagne);
+}
+
+
+/* ==============================
+   HERO SECTION
+================================= */
+
+.hero {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.90) 0%,
+            rgba(0, 0, 0, 0.65) 45%,
+            rgba(0, 0, 0, 0.20) 100%
+        ),
+        url("../images/hero.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-content {
+    width: 90%;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.hero-subtitle {
+    color: var(--color-champagne);
+
+    font-size: 14px;
+    letter-spacing: 5px;
+
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(45px, 7vw, 95px);
+
+    line-height: 1;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 30px;
+}
+
+.hero-description {
+    max-width: 600px;
+
+    color: var(--color-muted);
+
+    font-size: 17px;
+
+    margin-bottom: 35px;
+}
+
+.hero-button {
+    display: inline-block;
+
+    padding: 15px 32px;
+
+    background-color: var(--color-champagne);
+    color: #000;
+
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    transition: 0.3s;
+}
+
+.hero-button:hover {
+    background-color: var(--color-champagne-hover);
+}
+
+
+/* ==============================
+   GENERAL SECTION
+================================= */
+
+section {
+    padding: 100px 5%;
+}
+
+.section-heading {
+    text-align: center;
+
+    margin-bottom: 60px;
+}
+
+.section-heading p {
+    color: var(--color-champagne);
+
+    font-size: 12px;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 10px;
+}
+
+.section-heading h2 {
+    font-size: 45px;
+}
+
+
+/* ==============================
+   FEATURED CARS
+================================= */
+
+.featured {
+    background-color: var(--color-canvas);
+}
+
+.car-container {
+    max-width: 1400px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+.car-card {
+    background-color: var(--color-surface);
+    border: var(--border-hair);
+    border-radius: var(--radius-card);
+
+    overflow: hidden;
+
+    transition: 0.3s;
+}
+
+.car-card:hover {
+    transform: translateY(-8px);
+}
+
+.car-image {
+    width: 100%;
+    height: 300px;
+
+    overflow: hidden;
+}
+
+.car-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: 0.5s;
+}
+
+.car-card:hover img {
+    transform: scale(1.05);
+}
+
+.car-info {
+    padding: 25px;
+}
+
+.car-info p {
+    color: var(--color-champagne);
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+}
+
+.car-info h3 {
+    margin: 8px 0;
+}
+
+.car-info span {
+    color: var(--color-muted);
+
+    font-size: 15px;
+}
+
+.car-info h3 {
+    font-family: var(--font-serif);
+    font-size: var(--fs-card);
+}
+
+
+/* ==============================
+   BRANDS
+================================= */
+
+.brands {
+    background-color: var(--color-canvas);
+}
+
+.brand-container {
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+.brand {
+    position: relative;
+
+    height: 120px;
+
+    padding: 20px;
+
+    border: var(--border-hair);
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    overflow: hidden;
+
+    transition: 0.3s;
+}
+
+.brand img {
+    width: 65px;
+    height: 55px;
+
+    object-fit: contain;
+
+    opacity: 0.20;
+
+    margin-bottom: 8px;
+
+    transition: 0.3s;
+}
+
+.brand span {
+    position: relative;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    z-index: 2;
+
+    transition: 0.3s;
+}
+
+.brand:hover {
+    border-color: var(--color-champagne);
+}
+
+.brand:hover img {
+    opacity: 0.85;
+
+    transform: scale(1.08);
+}
+
+.brand:hover span {
+    color: var(--color-champagne);
+}
+
+
+/* ==============================
+   FIND YOUR CAR
+================================= */
+
+.price-section {
+    background-color: var(--color-canvas);
+}
+
+.price-container {
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 15px;
+}
+
+.price-card {
+    padding: 35px 20px;
+
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+
+    text-align: center;
+
+    transition: 0.3s;
+}
+
+.price-card:hover {
+    background-color: var(--color-champagne);
+
+    color: #000;
+}
+
+.price-card span {
+    display: block;
+
+    font-size: 12px;
+
+    color: var(--color-champagne);
+
+    margin-bottom: 15px;
+}
+
+.price-card:hover span {
+    color: #000;
+}
+
+.price-card h3 {
+    font-size: 15px;
+}
+
+
+/* ==============================
+   ABOUT
+================================= */
+
+.about {
+    min-height: 600px;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.90),
+            rgba(0, 0, 0, 0.55)
+        ),
+        url("../images/about.jpg");
+
+    background-size: cover;
+
+    background-position: center;
+}
+
+.about-content {
+    max-width: 700px;
+}
+
+.about-content > p:first-child {
+    color: var(--color-champagne);
+
+    font-size: 12px;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 15px;
+}
+
+.about h2 {
+    font-size: 55px;
+
+    line-height: 1.1;
+
+    margin-bottom: 25px;
+}
+
+.about-content > p:not(:first-child) {
+    color: var(--color-muted);
+
+    max-width: 650px;
+
+    margin-bottom: 30px;
+}
+
+.text-button {
+    color: var(--color-champagne);
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    transition: 0.3s;
+}
+
+.text-button:hover {
+    color: var(--color-champagne-hover);
+}
+
+
+/* ==============================
+   FOOTER
+================================= */
+
+footer {
+    padding: 70px 5% 30px;
+
+    text-align: center;
+
+    background-color: var(--color-surface);
+    border-top: var(--border-hair);
+}
+
+.footer-logo {
+    font-size: 28px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+}
+
+.footer-logo span {
+    color: var(--color-champagne);
+}
+
+.footer-tagline {
+    color: var(--color-muted);
+
+    margin-bottom: 45px;
+}
+
+.footer-contact {
+    max-width: 900px;
+
+    margin: 0 auto 50px;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 40px;
+}
+
+.footer-contact h4 {
+    color: var(--color-champagne);
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 10px;
+}
+
+.footer-contact p {
+    color: var(--color-muted);
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+.copyright {
+    padding-top: 25px;
+
+    border-top: var(--border-hair);
+
+    color: var(--color-muted);
+
+    font-size: 13px;
+}
+
+
+/* ==============================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 1000px) {
+
+    .nav-links {
+        gap: 18px;
+    }
+
+    .nav-links a {
+        font-size: 11px;
+    }
+
+    .car-container {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .price-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-contact {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .navbar {
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+
+        justify-content: center;
+
+        gap: 15px;
+    }
+
+    .hero {
+        min-height: 100vh;
+    }
+
+    .hero h1 {
+        font-size: 45px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+    }
+
+    .section-heading h2 {
+        font-size: 35px;
+    }
+
+    .brand-container {
+        grid-template-columns: 1fr;
+    }
+
+    .price-container {
+        grid-template-columns: 1fr;
+    }
+
+    .about {
+        min-height: 500px;
+    }
+
+    .about h2 {
+        font-size: 40px;
+    }
+}

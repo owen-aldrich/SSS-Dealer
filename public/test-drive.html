@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Test Drive | SSS+Dealer</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/home.css?v=5">
+    <link rel="stylesheet" href="css/test-drive.css?v=1">
+</head>
+
+<body class="home">
+
+    <!-- ============ NAVBAR ============ -->
+    <header>
+        <nav class="site-nav">
+            <a href="index.html" class="brand-word">SSS<span class="plus">+</span><span class="suffix">Dealer</span></a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="cars.html">Koleksi</a></li>
+                <li><a href="compare.html">Bandingkan</a></li>
+                <li><a href="account.html">Favorit</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="signin.html" class="btn btn-outline nav-account-link">
+                    <img src="images/icons/user-round.svg" alt="">
+                    Akun
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- ============ FORM VIEW ============ -->
+        <section class="td" id="bookingView">
+            <div class="td-intro">
+                <p class="overline">TEST DRIVE / PENGALAMAN PERSONAL</p>
+                <h1>Saatnya merasakan perbedaannya.</h1>
+                <p class="lead">Pilih mobil dan jadwal Anda. Tim kami akan menyiapkan sesi test drive yang sepenuhnya personal.</p>
+                <div class="td-steps">
+                    <span><span class="num">01</span>Mobil &amp; jadwal</span>
+                    <span><span class="num">02</span>Data kontak</span>
+                    <span><span class="num">03</span>Konfirmasi</span>
+                </div>
+            </div>
+
+            <div class="td-layout">
+                <!-- FORM -->
+                <form class="td-form" id="testDriveForm">
+                    <div id="testDriveMessage" class="form-message"></div>
+
+                    <!-- 01 Mobil & lokasi -->
+                    <div class="td-section">
+                        <div class="section-head"><span class="s-num">01</span><h2>Mobil &amp; lokasi</h2></div>
+                        <div class="td-field">
+                            <label for="tdCar">Mobil pilihan *</label>
+                            <select id="tdCar" required></select>
+                        </div>
+                        <div class="td-field">
+                            <label for="tdShowroom">Showroom *</label>
+                            <select id="tdShowroom" required>
+                                <option value="SSS+Dealer Jakarta Selatan">SSS+Dealer Jakarta Selatan</option>
+                                <option value="SSS+Dealer BSD">SSS+Dealer BSD</option>
+                                <option value="SSS+Dealer Surabaya">SSS+Dealer Surabaya</option>
+                            </select>
+                        </div>
+                        <div class="td-address">
+                            <img src="images/icons/map-pin.svg" alt="">
+                            <span id="tdAddress">Jl. Sultan Iskandar Muda No. 18, Kebayoran Lama, Jakarta Selatan 12240</span>
+                        </div>
+                    </div>
+
+                    <hr class="hr-divider">
+
+                    <!-- 02 Tanggal & waktu -->
+                    <div class="td-section">
+                        <div class="section-head"><span class="s-num">02</span><h2>Tanggal &amp; waktu</h2></div>
+                        <div class="td-field">
+                            <label for="tdDate">Tanggal test drive *</label>
+                            <input type="date" id="tdDate" required>
+                        </div>
+                        <div class="td-field">
+                            <label>Waktu tersedia (WIB) *</label>
+                            <div class="td-slots" id="tdSlots">
+                                <button type="button" class="td-slot" data-time="09.00">09.00</button>
+                                <button type="button" class="td-slot" data-time="10.30">10.30</button>
+                                <button type="button" class="td-slot" data-time="13.00">13.00</button>
+                                <button type="button" class="td-slot active" data-time="15.00">15.00</button>
+                                <button type="button" class="td-slot" data-time="16.30">16.30</button>
+                            </div>
+                        </div>
+                        <p class="td-note">Durasi sesi ±60 menit, termasuk pengenalan mobil dan rute test drive.</p>
+                    </div>
+
+                    <hr class="hr-divider">
+
+                    <!-- 03 Kenalkan diri Anda -->
+                    <div class="td-section">
+                        <div class="section-head"><span class="s-num">03</span><h2>Kenalkan diri Anda</h2></div>
+                        <div class="td-field">
+                            <label for="tdName">Nama lengkap *</label>
+                            <input type="text" id="tdName" required>
+                        </div>
+                        <div class="td-row">
+                            <div class="td-field">
+                                <label for="tdEmail">Alamat email *</label>
+                                <input type="email" id="tdEmail" required>
+                            </div>
+                            <div class="td-field">
+                                <label for="tdPhone">Nomor WhatsApp *</label>
+                                <input type="text" id="tdPhone" required>
+                            </div>
+                        </div>
+                        <div class="td-field">
+                            <label for="tdMessage">Catatan untuk konsultan (opsional)</label>
+                            <textarea id="tdMessage"></textarea>
+                        </div>
+                        <label class="td-agree">
+                            <input type="checkbox" id="tdAgree" required>
+                            Saya menyetujui kebijakan privasi dan bersedia dihubungi untuk keperluan pemesanan test drive ini.
+                        </label>
+                        <p class="td-note">* Wajib diisi. Data Anda hanya digunakan untuk layanan pemesanan.</p>
+                    </div>
+                </form>
+
+                <!-- SUMMARY -->
+                <aside class="td-summary">
+                    <p class="overline">PENGALAMAN ANDA</p>
+                    <div class="sum-photo"><img id="sumPhoto" src="" alt=""></div>
+                    <p class="sum-name" id="sumName">—</p>
+                    <p class="sum-meta" id="sumMeta"></p>
+                    <p class="sum-price" id="sumPrice"></p>
+                    <hr class="hr-divider">
+                    <div class="sum-rows">
+                        <div class="sum-row"><span class="k">Tanggal</span><span class="v" id="sumDate">—</span></div>
+                        <div class="sum-row"><span class="k">Waktu</span><span class="v" id="sumTime">15.00–16.00 WIB</span></div>
+                        <div class="sum-row"><span class="k">Durasi</span><span class="v">±60 menit</span></div>
+                    </div>
+                    <div class="sum-loc">
+                        <img src="images/icons/map-pin.svg" alt="">
+                        <span id="sumShowroom">SSS+Dealer Jakarta Selatan</span>
+                    </div>
+                    <hr class="hr-divider">
+                    <div class="sum-fee"><span class="k">Biaya test drive</span><span class="v">Tanpa biaya</span></div>
+                    <button type="submit" form="testDriveForm" class="btn btn-primary" id="tdSubmit">
+                        Konfirmasi pemesanan
+                        <img src="images/icons/arrow-right.svg" alt="">
+                    </button>
+                    <p class="td-note">Ringkasan akan dikirim ke email dan WhatsApp Anda setelah pemesanan dikonfirmasi.</p>
+                    <div class="sum-help">
+                        <img src="images/icons/headset.svg" alt="">
+                        Butuh bantuan? +62 21 5088 1900
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ============ CONFIRMATION VIEW ============ -->
+        <section class="td-confirm" id="confirmView" style="display:none;">
+            <div class="confirm-head">
+                <span class="check-circle">✓</span>
+                <p class="overline" id="confirmCode">PEMESANAN BERHASIL</p>
+                <h1>Pertemuan pertama Anda sudah siap.</h1>
+                <p class="confirm-desc" id="confirmDesc"></p>
+            </div>
+
+            <div class="confirm-card">
+                <div class="cc-photo">
+                    <div class="cc-img"><img id="ccPhoto" src="" alt=""></div>
+                    <div class="cc-caption">
+                        <span class="cc-brand" id="ccBrand"></span>
+                        <span class="cc-name" id="ccName"></span>
+                        <span class="cc-meta" id="ccMeta"></span>
+                        <span class="cc-price" id="ccPrice"></span>
+                    </div>
+                </div>
+                <div class="cc-detail">
+                    <div class="cc-top">
+                        <span class="overline">RINGKASAN TEST DRIVE</span>
+                        <span class="cc-confirmed">✓ Terkonfirmasi</span>
+                    </div>
+                    <span class="cc-date" id="ccDate"></span>
+                    <div class="sum-rows">
+                        <div class="sum-row"><span class="k">Waktu</span><span class="v" id="ccTime"></span></div>
+                        <div class="sum-row"><span class="k">Durasi</span><span class="v">±60 menit</span></div>
+                        <div class="sum-row"><span class="k">Atas nama</span><span class="v" id="ccPerson"></span></div>
+                    </div>
+                    <hr class="hr-divider">
+                    <div class="sum-loc">
+                        <img src="images/icons/map-pin.svg" alt="">
+                        <span id="ccShowroom"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirm-next">
+                <p class="overline">LANGKAH SELANJUTNYA</p>
+                <h2>Sedikit persiapan. Pengalaman maksimal.</h2>
+                <div class="confirm-steps">
+                    <div class="confirm-step">
+                        <span class="cs-num">01</span>
+                        <h3>Simpan jadwal Anda</h3>
+                        <p>Tambahkan sesi ke kalender. Tim kami akan mengirim pengingat sebelum jadwal.</p>
+                    </div>
+                    <div class="confirm-step">
+                        <span class="cs-num">02</span>
+                        <h3>Bawa dokumen berkendara</h3>
+                        <p>Siapkan SIM A yang masih berlaku dan identitas diri untuk verifikasi singkat.</p>
+                    </div>
+                    <div class="confirm-step">
+                        <span class="cs-num">03</span>
+                        <h3>Datang 15 menit lebih awal</h3>
+                        <p>Kenali konsultan Anda dan nikmati pengenalan mobil sebelum mulai berkendara.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirm-actions">
+                <div class="ca-buttons">
+                    <a href="cars.html" class="btn btn-primary">Kembali ke koleksi <img src="images/icons/arrow-up-right-dark.svg" alt=""></a>
+                    <a href="#" class="btn btn-outline" id="ccDetailLink">Lihat detail mobil <img src="images/icons/arrow-up-right.svg" alt=""></a>
+                </div>
+                <p class="ca-help">Perlu mengubah atau membatalkan jadwal?<br>Hubungi konsultan · <a href="https://wa.me/622150881900" target="_blank" rel="noopener">+62 21 5088 1900</a></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <p class="f-word">SSS+Dealer</p>
+                <p>Performa pilihan. Pengalaman personal. Temukan mobil yang mencerminkan diri Anda.</p>
+                <p class="overline">JAKARTA · INDONESIA</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Jelajahi</p>
+                <a href="cars.html">Koleksi mobil</a>
+                <a href="compare.html">Bandingkan mobil</a>
+                <a href="account.html">Favorit saya</a>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Layanan</p>
+                <a href="cars.html">Test drive</a>
+                <p>Konsultasi pembelian</p>
+                <p>Pembiayaan</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Hubungi kami</p>
+                <p>+62 21 5088 1900</p>
+                <p>concierge@sssdealer.id</p>
+                <p>Senin–Sabtu, 09.00–18.00</p>
+            </div>
+        </div>
+        <hr class="hr-hair">
+        <div class="footer-legal">
+            <p>© 2026 SSS+Dealer. Seluruh hak dilindungi.</p>
+            <p>Privasi · Syarat &amp; ketentuan · Instagram</p>
+        </div>
+    </footer>
+
+    <script src="js/nav-auth.js?v=4"></script>
+    <script src="js/test-drive.js?v=1"></script>
+
+</body>
+
+</html>

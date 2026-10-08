@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun Saya | SSS+Dealer</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/home.css?v=5">
+    <link rel="stylesheet" href="css/account.css?v=2">
+</head>
+
+<body class="home">
+
+    <!-- ============ NAVBAR ============ -->
+    <header>
+        <nav class="site-nav">
+            <a href="index.html" class="brand-word">SSS<span class="plus">+</span><span class="suffix">Dealer</span></a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="cars.html">Koleksi</a></li>
+                <li><a href="compare.html">Bandingkan</a></li>
+                <li><a href="account.html" class="active">Favorit</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="signin.html" class="btn btn-outline nav-account-link">
+                    <img src="images/icons/user-round.svg" alt="">
+                    Akun
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="account">
+
+            <!-- Header + profile -->
+            <div class="account-head">
+                <div class="account-intro">
+                    <p class="overline">AKUN / PENGALAMAN PERSONAL</p>
+                    <h1>Akun Saya</h1>
+                    <p class="lead">Pilihan, pengalaman, dan informasi pribadi Anda dalam satu tempat.</p>
+                </div>
+
+                <div class="profile-card">
+                    <div class="avatar-wrap">
+                        <img id="profilePhoto" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%231B1E21'/%3E%3Ccircle cx='40' cy='31' r='15' fill='%2324282B'/%3E%3Cellipse cx='40' cy='70' rx='26' ry='20' fill='%2324282B'/%3E%3C/svg%3E" alt="Foto profil">
+                        <label for="photoInput" class="photo-upload" title="Ganti foto">📷</label>
+                        <input type="file" id="photoInput" accept="image/*" style="display:none;">
+                    </div>
+                    <div class="profile-identity">
+                        <h2 id="profileFullname">Memuat...</h2>
+                        <p class="p-email" id="profileEmail"></p>
+                        <span class="role-badge" id="profileRole">USER</span>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="account-tabs">
+                    <button class="account-tab active" data-tab="favorites">Favorit Saya</button>
+                    <button class="account-tab" data-tab="testdrive">Test Drive Saya</button>
+                    <button class="account-tab" data-tab="settings">Pengaturan Akun</button>
+                </div>
+            </div>
+
+            <div class="account-body">
+
+                <!-- FAVORITES -->
+                <div class="account-panel active" id="panel-favorites">
+                    <div class="fav-controls" id="favControls" style="display:none;">
+                        <span class="select-all"><img src="images/icons/square-check.svg" alt="" style="width:16px;height:16px;"> Semua favorit</span>
+                        <span class="fav-sort">Urutkan: Baru disimpan</span>
+                    </div>
+                    <div class="favorites-grid" id="favoritesGrid"></div>
+                    <p class="empty-state" id="favoritesEmpty" style="display:none;">
+                        Belum ada mobil favorit. Jelajahi <a href="cars.html">koleksi kami</a>.
+                    </p>
+                </div>
+
+                <!-- TEST DRIVE (diisi penuh di Phase 2) -->
+                <div class="account-panel" id="panel-testdrive">
+                    <div class="settings-intro">
+                        <h2>Test Drive Saya</h2>
+                        <p>Riwayat dan status pemesanan test drive Anda akan tampil di sini.</p>
+                    </div>
+                    <div class="history-list" id="testDriveList"></div>
+                    <p class="empty-state" id="testDriveEmpty" style="display:none;">
+                        Belum ada pemesanan test drive. Pilih mobil di <a href="cars.html">koleksi</a> lalu pesan test drive.
+                    </p>
+                </div>
+
+                <!-- SETTINGS -->
+                <div class="account-panel" id="panel-settings">
+                    <div class="settings-intro">
+                        <h2>Pengaturan Akun</h2>
+                        <p>Perbarui data pribadi Anda. Email tetap hanya baca.</p>
+                    </div>
+
+                    <form id="settingsForm">
+                        <div id="settingsMessage" class="form-message"></div>
+
+                        <!-- 01 / PROFIL ANDA -->
+                        <div class="settings-section">
+                            <div class="section-side">
+                                <p class="overline">01 / PROFIL ANDA</p>
+                                <h3>Informasi pribadi</h3>
+                                <p>Pastikan data Anda tetap terkini agar konsultan kami dapat memberikan layanan yang personal.</p>
+                            </div>
+                            <div class="section-fields">
+                                <div class="field">
+                                    <label for="fullname">Nama lengkap</label>
+                                    <input type="text" id="fullname" required>
+                                </div>
+                                <div class="field-row">
+                                    <div class="field readonly">
+                                        <label for="email">Email · hanya baca</label>
+                                        <div class="readonly-box">
+                                            <span id="emailDisplay"></span>
+                                            <img src="images/icons/lock-keyhole.svg" alt="">
+                                        </div>
+                                        <input type="hidden" id="email">
+                                        <p class="field-hint">Email digunakan untuk masuk dan tidak dapat diubah.</p>
+                                    </div>
+                                    <div class="field">
+                                        <label for="username">Username</label>
+                                        <input type="text" id="username" required>
+                                        <p class="field-hint">Dipakai untuk masuk selain email.</p>
+                                    </div>
+                                </div>
+                                <div class="field-row">
+                                    <div class="field">
+                                        <label for="age">Usia</label>
+                                        <input type="number" id="age" min="17" max="100">
+                                    </div>
+                                    <div class="field">
+                                        <label for="address">Alamat</label>
+                                        <input type="text" id="address">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 02 / KEAMANAN -->
+                        <div class="settings-section" style="margin-top:32px;">
+                            <div class="section-side">
+                                <p class="overline">02 / KEAMANAN</p>
+                                <h3>Ubah kata sandi</h3>
+                                <p>Opsional. Isi hanya jika Anda ingin mengganti kata sandi.</p>
+                            </div>
+                            <div class="section-fields">
+                                <div class="field-row">
+                                    <div class="field">
+                                        <label for="currentPassword">Kata sandi saat ini</label>
+                                        <input type="password" id="currentPassword" placeholder="Isi untuk mengganti">
+                                    </div>
+                                    <div class="field">
+                                        <label for="newPassword">Kata sandi baru</label>
+                                        <input type="password" id="newPassword" minlength="6">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="settings-actions">
+                            <span class="action-note">Perubahan akan diterapkan setelah Anda menyimpannya.</span>
+                            <div class="action-buttons">
+                                <button type="button" class="logout-btn" id="logoutBtn">
+                                    Keluar
+                                    <img src="images/icons/log-out.svg" alt="">
+                                </button>
+                                <button type="submit" class="save-btn">Simpan Perubahan</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <p class="f-word">SSS+Dealer</p>
+                <p>Performa pilihan. Pengalaman personal. Temukan mobil yang mencerminkan diri Anda.</p>
+                <p class="overline">JAKARTA · INDONESIA</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Jelajahi</p>
+                <a href="cars.html">Koleksi mobil</a>
+                <a href="compare.html">Bandingkan mobil</a>
+                <a href="account.html">Favorit saya</a>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Layanan</p>
+                <a href="cars.html">Test drive</a>
+                <p>Konsultasi pembelian</p>
+                <p>Pembiayaan</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Hubungi kami</p>
+                <p>+62 21 5088 1900</p>
+                <p>concierge@sssdealer.id</p>
+                <p>Senin–Sabtu, 09.00–18.00</p>
+            </div>
+        </div>
+        <hr class="hr-hair">
+        <div class="footer-legal">
+            <p>© 2026 SSS+Dealer. Seluruh hak dilindungi.</p>
+            <p>Privasi · Syarat &amp; ketentuan · Instagram</p>
+        </div>
+    </footer>
+
+    <script src="js/nav-auth.js?v=5"></script>
+    <script src="js/favorites.js?v=1"></script>
+    <script src="js/account.js?v=3"></script>
+
+</body>
+
+</html>

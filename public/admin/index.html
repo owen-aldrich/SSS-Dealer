@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Mobil | Admin SSS+Dealer</title>
+    <link rel="stylesheet" href="/css/style.css?v=4">
+    <link rel="stylesheet" href="/css/admin.css?v=1">
+</head>
+
+<body class="admin-body">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="admin-sidebar">
+        <div class="side-brand">
+            <div class="b-word">SSS+Dealer</div>
+            <div class="b-sub">ADMINISTRASI</div>
+        </div>
+        <nav class="side-nav">
+            <a href="/admin/" class="side-link active"><img src="/images/icons/car-front.svg" alt="">Mobil</a>
+            <a href="/admin/test-drive.html" class="side-link"><img src="/images/icons/calendar-days.svg" alt="">Test Drive</a>
+            <a href="/admin/leads.html" class="side-link"><img src="/images/icons/message-circle.svg" alt="">Lead</a>
+            <button type="button" class="side-link side-logout" onclick="adminLogout()"><img src="/images/icons/log-out.svg" alt="">Keluar</button>
+        </nav>
+        <div class="side-foot">SSS+Dealer Jakarta Selatan<br>Panel pengelolaan · 2026</div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <div class="admin-main">
+        <div class="admin-topbar">
+            <span class="crumb">Administrasi / Mobil</span>
+            <div class="topbar-right">
+                <a href="/index.html" class="view-site">Lihat situs <img src="/images/icons/arrow-up-right.svg" alt=""></a>
+                <span class="admin-user"><img src="/images/icons/user-round.svg" alt=""><span id="adminName">Admin</span></span>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-head">
+                <div class="head-text">
+                    <p class="overline">SSS+DEALER / MOBIL</p>
+                    <h1>Daftar Mobil</h1>
+                    <p class="head-desc">Kelola informasi, publikasi, dan ketersediaan koleksi Anda.</p>
+                </div>
+                <a href="/admin/car-form.html" class="btn btn-primary">Tambah Mobil <img src="/images/icons/plus.svg" alt=""></a>
+            </div>
+
+            <div class="admin-search">
+                <img src="/images/icons/search.svg" alt="">
+                <input type="text" id="adminSearch" placeholder="Cari merek, model, atau kode unit...">
+            </div>
+
+            <div class="admin-filters">
+                <div class="chip-row" id="statusChips">
+                    <button class="chip active" data-status="all">Semua</button>
+                    <button class="chip" data-status="available">Tersedia</button>
+                    <button class="chip" data-status="reserved">Dipesan</button>
+                    <button class="chip" data-status="sold">Terjual</button>
+                    <button class="chip" data-status="draft">Draft</button>
+                </div>
+                <span class="admin-sort">Terbaru</span>
+            </div>
+
+            <div class="admin-table" id="carsTable">
+                <div class="t-head">
+                    <span>MOBIL</span><span>HARGA INDIKATIF</span><span>TAHUN</span>
+                    <span>STATUS</span><span>DIPERBARUI</span><span>AKSI</span>
+                </div>
+                <div id="carsRows"></div>
+            </div>
+            <p class="admin-empty" id="carsEmpty" style="display:none;">Belum ada mobil.</p>
+
+            <div class="admin-footrow">
+                <span class="count" id="carsCount">Menampilkan 0 mobil</span>
+            </div>
+
+            <div class="admin-note">
+                Draft tidak ditampilkan di koleksi pembeli. Harga bersifat indikatif OTR Jakarta;
+                proses pembelian tetap melalui konsultasi WhatsApp.
+            </div>
+
+            <div class="admin-meta">
+                <span>Panel pengelolaan · SSS+Dealer Jakarta Selatan</span>
+                <span id="adminTimestamp"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/nav-auth.js?v=4"></script>
+    <script src="/js/admin/common.js?v=1"></script>
+    <script src="/js/admin/cars.js?v=1"></script>
+
+</body>
+
+</html>

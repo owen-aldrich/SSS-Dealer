@@ -1,0 +1,338 @@
+/* ==================================================
+   CATALOG PAGE — SSS+Dealer
+   Mengikuti Figma frame "Katalog mobil · SSS+Dealer" (4:9998)
+   Reuse komponen dari home.css (.v-card, .btn, .site-nav,
+   .site-footer, .overline). Memakai token dari style.css
+===================================================== */
+
+.catalog {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: var(--page-pad, 72px);
+}
+
+/* ---------- Page intro ---------- */
+.catalog-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.catalog-intro h1 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: var(--fs-heading);
+    line-height: 1.15;
+    color: var(--color-ivory);
+}
+
+.catalog-intro .lead {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-muted);
+    max-width: 820px;
+}
+
+/* ---------- Search bar ---------- */
+.catalog-search {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 60px;
+    padding: 0 20px;
+    background-color: var(--color-surface);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+}
+
+.catalog-search img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.catalog-search input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: 14px;
+}
+
+.catalog-search input::placeholder {
+    color: var(--color-muted);
+}
+
+/* ---------- Explore layout ---------- */
+.catalog-explore {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+/* ---------- Sidebar filters ---------- */
+.filter-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    width: 260px;
+    flex-shrink: 0;
+}
+
+.filter-panel .filter-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-panel .filter-head .ftitle {
+    font-size: 18px;
+    color: var(--color-ivory);
+}
+
+.filter-panel .filter-head .freset {
+    font-size: 12px;
+    color: var(--color-champagne);
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.filter-panel .fgroup-label {
+    font-size: 13px;
+    color: var(--color-ivory);
+}
+
+/* Checkbox option row */
+.filter-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.filter-opt input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.filter-opt .box {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-opt input:checked + .box {
+    background-color: var(--color-champagne);
+    border-color: var(--color-champagne);
+}
+
+.filter-opt input:checked + .box::after {
+    content: "";
+    width: 9px;
+    height: 5px;
+    border-left: 2px solid #151718;
+    border-bottom: 2px solid #151718;
+    transform: translateY(-1px) rotate(-45deg);
+}
+
+.filter-opt .opt-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+.filter-opt .opt-count {
+    font-size: 12px;
+    color: var(--color-muted);
+}
+
+/* Price range inputs */
+.price-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.price-field label {
+    font-size: 12px;
+    color: var(--color-muted);
+}
+
+.price-field input {
+    height: 52px;
+    padding: 0 16px;
+    background-color: var(--color-canvas);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+}
+
+.price-field input:focus {
+    border-color: var(--color-champagne);
+}
+
+.filter-note {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--color-muted);
+}
+
+/* ---------- Results column ---------- */
+.results {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.results-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.results-bar .results-count {
+    font-size: 14px;
+    color: var(--color-muted);
+    letter-spacing: 0;
+}
+
+.sort-control {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 12px;
+    border: var(--border-hair);
+    position: relative;
+}
+
+.sort-control img {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+.sort-control select {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    cursor: pointer;
+    padding-right: 4px;
+}
+
+.sort-control select option {
+    background-color: var(--color-surface);
+    color: var(--color-ivory);
+}
+
+/* Results grid — 2 columns */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* Catalog card action row (3 items) */
+.v-card .v-actions.catalog-actions {
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.v-card .v-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 14px;
+    background-color: var(--color-canvas);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-champagne);
+}
+
+.v-card .v-wa img { width: 16px; height: 16px; }
+
+/* Selected (in compare) card state */
+.v-card.selected {
+    border-color: var(--color-champagne);
+}
+
+.v-card .v-compare.active .box,
+.quick-compare-active { color: var(--color-champagne); }
+
+.no-results {
+    grid-column: 1 / -1;
+    color: var(--color-muted);
+    font-size: 14px;
+}
+
+/* ---------- Compare tray ---------- */
+.compare-tray {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+    background-color: var(--color-raised);
+    border: 1px solid var(--color-champagne);
+    border-radius: var(--radius-control);
+}
+
+.compare-tray .tray-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.compare-tray .tray-count {
+    font-size: 16px;
+    color: var(--color-ivory);
+}
+
+.compare-tray .tray-names {
+    font-size: 12px;
+    color: var(--color-muted);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+    .catalog { padding: 40px; }
+}
+
+@media (max-width: 900px) {
+    .catalog-explore { flex-direction: column; }
+    .filter-panel { width: 100%; }
+    .results-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+    .catalog { padding: 24px; }
+    .catalog-intro h1 { font-size: 36px; }
+    .compare-tray { flex-direction: column; align-items: flex-start; }
+    .results-bar { flex-direction: column; align-items: flex-start; gap: 12px; }
+}

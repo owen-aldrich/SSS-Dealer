@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Detail Mobil | SSS+Dealer</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/home.css?v=5">
+    <link rel="stylesheet" href="css/car-detail.css?v=3">
+</head>
+
+<body class="home">
+
+    <!-- ============ NAVBAR ============ -->
+    <header>
+        <nav class="site-nav">
+            <a href="index.html" class="brand-word">SSS<span class="plus">+</span><span class="suffix">Dealer</span></a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="cars.html" class="active">Koleksi</a></li>
+                <li><a href="compare.html">Bandingkan</a></li>
+                <li><a href="account.html">Favorit</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="signin.html" class="btn btn-outline nav-account-link">
+                    <img src="images/icons/user-round.svg" alt="">
+                    Akun
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="detail" id="detailContent">
+
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb" aria-label="breadcrumb">
+                <a href="index.html">Beranda</a><span class="sep">/</span>
+                <a href="cars.html">Koleksi</a><span class="sep">/</span>
+                <span id="bcBrand"></span><span class="sep">/</span>
+                <span class="current" id="bcName"></span>
+            </nav>
+
+            <!-- Hero: gallery + offer -->
+            <section class="detail-hero">
+                <div class="gallery">
+                    <div class="gallery-main">
+                        <img id="carImage" src="" alt="">
+                        <span class="gallery-index" id="galleryIndex">01 / 01 · Eksterior</span>
+                        <button class="gallery-zoom" type="button" title="Perbesar">
+                            <img src="images/icons/maximize.svg" alt="">
+                        </button>
+                    </div>
+                    <div class="gallery-thumbs" id="galleryThumbs"></div>
+                </div>
+
+                <div class="offer">
+                    <p class="overline" id="carBrand"></p>
+                    <h1 id="carName"></h1>
+                    <p class="offer-desc" id="carDescription"></p>
+
+                    <hr class="hr-hair">
+
+                    <div class="offer-price">
+                        <span class="price-label">Harga indikatif OTR Jakarta</span>
+                        <span class="price-value" id="carPrice"></span>
+                        <span class="price-note">Penawaran, ketersediaan, dan proses pembelian dikonsultasikan melalui WhatsApp.</span>
+                    </div>
+
+                    <div class="offer-metrics">
+                        <div class="metric">
+                            <span class="metric-value" id="specHorsepower">-</span>
+                            <span class="metric-label">Tenaga</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value" id="specAccel">-</span>
+                            <span class="metric-label">0–100 km/jam</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value" id="specTopSpeed">-</span>
+                            <span class="metric-label">Kecepatan</span>
+                        </div>
+                    </div>
+
+                    <hr class="hr-hair">
+
+                    <a href="#" target="_blank" rel="noopener" class="btn btn-primary" id="whatsappBtn">
+                        Chat via WhatsApp
+                        <img src="images/icons/arrow-up-right-dark.svg" alt="">
+                    </a>
+                    <a href="#" class="btn btn-outline" id="testDriveBtn">
+                        Pesan test drive
+                        <img src="images/icons/arrow-up-right.svg" alt="">
+                    </a>
+
+                    <div class="offer-extra">
+                        <button type="button" class="add-compare" id="compareBtn">+ Tambah ke perbandingan</button>
+                        <button type="button" class="fav-btn" id="favoriteBtn">
+                            <span id="favLabel">Tambah ke favorit</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabs -->
+            <div class="detail-tabs">
+                <button type="button" class="tab active" data-tab="spec">Spesifikasi lengkap</button>
+                <button type="button" class="tab" data-tab="features">Fitur &amp; kenyamanan</button>
+                <button type="button" class="tab" data-tab="unit">Informasi unit</button>
+            </div>
+
+            <!-- Spec -->
+            <section class="spec-block" data-panel="spec">
+                <div>
+                    <p class="overline">01 / ANGKA DI BALIK KARAKTER</p>
+                    <h2 style="margin-top:18px;">Dirancang untuk lebih dari sekadar cepat.</h2>
+                </div>
+                <div class="spec-columns">
+                    <div>
+                        <div class="spec-row"><span class="spec-key">Tenaga maksimum</span><span class="spec-val" id="rowHp">-</span></div>
+                        <div class="spec-row"><span class="spec-key">Torsi maksimum</span><span class="spec-val" id="rowTorque">-</span></div>
+                        <div class="spec-row"><span class="spec-key">Transmisi</span><span class="spec-val" id="rowTransmission">-</span></div>
+                        <div class="spec-row"><span class="spec-key">Penggerak</span><span class="spec-val" id="rowDrivetrain">-</span></div>
+                        <div class="spec-row"><span class="spec-key">0–100 km/jam</span><span class="spec-val" id="rowAccel">-</span></div>
+                        <div class="spec-row"><span class="spec-key">Kecepatan maksimum</span><span class="spec-val" id="rowTopSpeed">-</span></div>
+                    </div>
+                    <div>
+                        <div class="spec-row"><span class="spec-key">Tipe bodi</span><span class="spec-val" id="rowType">-</span></div>
+                        <div class="spec-row"><span class="spec-key">Powertrain</span><span class="spec-val" id="rowPowertrain">-</span></div>
+                        <div class="spec-row"><span class="spec-key">Kelas performa</span><span class="spec-val" id="rowPerformance">-</span></div>
+                        <div class="spec-row"><span class="spec-key">Bahan bakar</span><span class="spec-val" id="rowFuel">Bensin</span></div>
+                        <div class="spec-row"><span class="spec-key">Kapasitas penumpang</span><span class="spec-val">4 orang (2+2)</span></div>
+                        <div class="spec-row"><span class="spec-key">Warna eksterior</span><span class="spec-val">Sesuai unit</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="features-block" data-panel="features" hidden>
+                <div>
+                    <p class="overline">02 / DETAIL YANG MEMBEDAKAN</p>
+                    <h2 style="margin-top:18px;">Performa berpadu kenyamanan.</h2>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-col">
+                        <h3>Dinamika berkendara</h3>
+                        <ul>
+                            <li>Suspensi adaptif</li>
+                            <li>Paket Sport Chrono</li>
+                            <li>Mode berkendara individual</li>
+                            <li>Rem performa tinggi</li>
+                        </ul>
+                    </div>
+                    <div class="feature-col">
+                        <h3>Interior &amp; konektivitas</h3>
+                        <ul>
+                            <li>Jok sport elektrik dengan memori</li>
+                            <li>Layar sentuh infotainment</li>
+                            <li>Apple CarPlay &amp; navigasi</li>
+                            <li>Sistem audio surround</li>
+                        </ul>
+                    </div>
+                    <div class="feature-col">
+                        <h3>Keselamatan &amp; bantuan</h3>
+                        <ul>
+                            <li>Lampu LED matrix</li>
+                            <li>Sensor parkir depan &amp; belakang</li>
+                            <li>Kamera mundur</li>
+                            <li>Kontrol stabilitas</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="features-note">
+                    Spesifikasi dan fitur contoh dapat berbeda menurut konfigurasi unit.
+                    Verifikasi ketersediaan bersama konsultan.
+                </p>
+            </section>
+
+            <!-- Unit info -->
+            <section class="unit-info" data-panel="unit" hidden>
+                <div class="unit-intro">
+                    <p class="overline">03 / SIAP UNTUK ANDA</p>
+                    <h2>Kenali unit pilihan Anda.</h2>
+                    <p class="offer-desc">
+                        Unit contoh tersedia untuk sesi test drive personal di SSS+Dealer
+                        Jakarta Selatan. Penawaran, ketersediaan, dan proses pembelian
+                        dikonsultasikan melalui WhatsApp.
+                    </p>
+                </div>
+                <div class="unit-table">
+                    <div class="u-row"><span class="u-key">Tahun / kondisi</span><span class="u-val">2024 / Baru</span></div>
+                    <div class="u-row"><span class="u-key">Eksterior / interior</span><span class="u-val">Sesuai unit / Kulit</span></div>
+                    <div class="u-row"><span class="u-key">Lokasi</span><span class="u-val">SSS+Dealer Jakarta Selatan</span></div>
+                    <div class="u-row"><span class="u-key">Garansi</span><span class="u-val">Mengikuti ketentuan prinsipal</span></div>
+                    <a href="#" class="btn btn-primary unit-cta" id="unitTestDriveBtn">
+                        Jadwalkan pengalaman Anda
+                        <img src="images/icons/arrow-up-right-dark.svg" alt="">
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <p class="f-word">SSS+Dealer</p>
+                <p>Performa pilihan. Pengalaman personal. Temukan mobil yang mencerminkan diri Anda.</p>
+                <p class="overline">JAKARTA · INDONESIA</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Jelajahi</p>
+                <a href="cars.html">Koleksi mobil</a>
+                <a href="compare.html">Bandingkan mobil</a>
+                <a href="account.html">Favorit saya</a>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Layanan</p>
+                <a href="cars.html">Test drive</a>
+                <p>Konsultasi pembelian</p>
+                <p>Pembiayaan</p>
+            </div>
+            <div class="footer-col">
+                <p class="col-title">Hubungi kami</p>
+                <p>+62 21 5088 1900</p>
+                <p>concierge@sssdealer.id</p>
+                <p>Senin–Sabtu, 09.00–18.00</p>
+            </div>
+        </div>
+        <hr class="hr-hair">
+        <div class="footer-legal">
+            <p>© 2026 SSS+Dealer. Seluruh hak dilindungi.</p>
+            <p>Privasi · Syarat &amp; ketentuan · Instagram</p>
+        </div>
+    </footer>
+
+    <script src="js/nav-auth.js?v=4"></script>
+    <script src="js/car-detail.js?v=2"></script>
+
+</body>
+
+</html>

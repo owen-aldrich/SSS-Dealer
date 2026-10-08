@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Lead | Admin SSS+Dealer</title>
+    <link rel="stylesheet" href="/css/style.css?v=4">
+    <link rel="stylesheet" href="/css/admin.css?v=1">
+</head>
+
+<body class="admin-body">
+
+    <aside class="admin-sidebar">
+        <div class="side-brand">
+            <div class="b-word">SSS+Dealer</div>
+            <div class="b-sub">ADMINISTRASI</div>
+        </div>
+        <nav class="side-nav">
+            <a href="/admin/" class="side-link"><img src="/images/icons/car-front.svg" alt="">Mobil</a>
+            <a href="/admin/test-drive.html" class="side-link"><img src="/images/icons/calendar-days.svg" alt="">Test Drive</a>
+            <a href="/admin/leads.html" class="side-link active"><img src="/images/icons/message-circle.svg" alt="">Lead</a>
+            <button type="button" class="side-link side-logout" onclick="adminLogout()"><img src="/images/icons/log-out.svg" alt="">Keluar</button>
+        </nav>
+        <div class="side-foot">SSS+Dealer Jakarta Selatan<br>Panel pengelolaan · 2026</div>
+    </aside>
+
+    <div class="admin-main">
+        <div class="admin-topbar">
+            <span class="crumb">Administrasi / Lead</span>
+            <div class="topbar-right">
+                <a href="/index.html" class="view-site">Lihat situs <img src="/images/icons/arrow-up-right.svg" alt=""></a>
+                <span class="admin-user"><img src="/images/icons/user-round.svg" alt=""><span id="adminName">Admin</span></span>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-head">
+                <div class="head-text">
+                    <p class="overline">SSS+DEALER / LEAD</p>
+                    <h1>Kelola Lead</h1>
+                    <p class="head-desc">Catat calon pembeli dari chat WhatsApp dan dampingi hingga closing.</p>
+                </div>
+                <button type="button" class="btn btn-primary" id="addLeadBtn">Tambah Lead <img src="/images/icons/plus.svg" alt=""></button>
+            </div>
+
+            <div class="lead-summary">
+                <div class="lead-stat">
+                    <div class="ls-top"><span class="ls-label">Baru</span><img src="/images/icons/message-circle.svg" alt=""></div>
+                    <span class="ls-num" id="statNew">0</span>
+                    <span class="ls-sub">Perlu tindak lanjut</span>
+                </div>
+                <div class="lead-stat">
+                    <div class="ls-top"><span class="ls-label">Dihubungi</span><img src="/images/icons/message-circle.svg" alt=""></div>
+                    <span class="ls-num" id="statContacted">0</span>
+                    <span class="ls-sub">Konsultasi berlangsung</span>
+                </div>
+                <div class="lead-stat">
+                    <div class="ls-top"><span class="ls-label">Negosiasi</span><img src="/images/icons/message-circle.svg" alt=""></div>
+                    <span class="ls-num" id="statNegotiation">0</span>
+                    <span class="ls-sub">Penawaran dibahas</span>
+                </div>
+                <div class="lead-stat">
+                    <div class="ls-top"><span class="ls-label">Closing</span><img src="/images/icons/message-circle.svg" alt=""></div>
+                    <span class="ls-num" id="statClosing">0</span>
+                    <span class="ls-sub">Administrasi bersama konsultan</span>
+                </div>
+            </div>
+
+            <div class="admin-search">
+                <img src="/images/icons/search.svg" alt="">
+                <input type="text" id="leadSearch" placeholder="Cari nama, email, atau mobil diminati...">
+            </div>
+
+            <div class="admin-filters">
+                <div class="chip-row" id="leadChips">
+                    <button class="chip active" data-status="all">Semua</button>
+                    <button class="chip" data-status="new">Baru</button>
+                    <button class="chip" data-status="contacted">Dihubungi</button>
+                    <button class="chip" data-status="negotiation">Negosiasi</button>
+                    <button class="chip" data-status="closing">Closing</button>
+                </div>
+            </div>
+
+            <div class="admin-table" id="leadTable">
+                <div class="t-head" style="grid-template-columns: 1.6fr 1.6fr 1fr 1.2fr 1.4fr;">
+                    <span>CALON PEMBELI</span><span>MOBIL DIMINATI</span><span>STATUS</span><span>KONSULTAN</span><span>TINDAKAN</span>
+                </div>
+                <div id="leadRows"></div>
+            </div>
+            <p class="admin-empty" id="leadEmpty" style="display:none;">Belum ada lead.</p>
+
+            <div class="admin-note">
+                Lead pembelian ditindaklanjuti melalui konsultasi WhatsApp. Booking test drive dikelola
+                terpisah dan tidak menjadi syarat pembelian.
+            </div>
+
+            <div class="admin-meta">
+                <span>Panel pengelolaan · SSS+Dealer Jakarta Selatan</span>
+                <span id="leadCount"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal tambah / ubah lead -->
+    <div class="td-modal-overlay" id="leadModal" style="display:none;">
+        <div class="td-modal">
+            <h3 id="leadModalTitle">Tambah Lead</h3>
+            <p class="modal-sub" id="leadModalSub"></p>
+            <div class="admin-field"><label>Nama calon pembeli *</label><input type="text" id="leadModalName" placeholder="Nama lengkap"></div>
+            <div class="admin-field"><label>No. HP / WhatsApp *</label><input type="text" id="leadModalPhone" placeholder="0812xxxxxxx"></div>
+            <div class="admin-field"><label>Email (opsional)</label><input type="email" id="leadModalEmail" placeholder="email@contoh.com"></div>
+            <div class="admin-field"><label>Mobil diminati</label>
+                <select id="leadModalCar"><option value="">— Tidak spesifik —</option></select>
+            </div>
+            <div class="admin-field"><label>Status</label>
+                <select id="leadModalStatus">
+                    <option value="new">Baru</option>
+                    <option value="contacted">Dihubungi</option>
+                    <option value="negotiation">Negosiasi</option>
+                    <option value="closing">Closing</option>
+                </select>
+            </div>
+            <div class="admin-field"><label>Konsultan</label><input type="text" id="leadModalConsultant" placeholder="Nama konsultan"></div>
+            <div class="admin-field"><label>Catatan</label><textarea id="leadModalNote"></textarea></div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" id="leadModalCancel">Batal</button>
+                <button type="button" class="save-btn" id="leadModalSave">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/nav-auth.js?v=4"></script>
+    <script src="/js/admin/common.js?v=1"></script>
+    <script src="/js/admin/leads.js?v=1"></script>
+
+</body>
+
+</html>

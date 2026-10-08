@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah / Edit Mobil | Admin SSS+Dealer</title>
+    <link rel="stylesheet" href="/css/style.css?v=4">
+    <link rel="stylesheet" href="/css/admin.css?v=1">
+</head>
+
+<body class="admin-body">
+
+    <aside class="admin-sidebar">
+        <div class="side-brand">
+            <div class="b-word">SSS+Dealer</div>
+            <div class="b-sub">ADMINISTRASI</div>
+        </div>
+        <nav class="side-nav">
+            <a href="/admin/" class="side-link active"><img src="/images/icons/car-front.svg" alt="">Mobil</a>
+            <a href="/admin/test-drive.html" class="side-link"><img src="/images/icons/calendar-days.svg" alt="">Test Drive</a>
+            <a href="/admin/leads.html" class="side-link"><img src="/images/icons/message-circle.svg" alt="">Lead</a>
+            <button type="button" class="side-link side-logout" onclick="adminLogout()"><img src="/images/icons/log-out.svg" alt="">Keluar</button>
+        </nav>
+        <div class="side-foot">SSS+Dealer Jakarta Selatan<br>Panel pengelolaan · 2026</div>
+    </aside>
+
+    <div class="admin-main">
+        <div class="admin-topbar">
+            <span class="crumb">Administrasi / Mobil</span>
+            <div class="topbar-right">
+                <a href="/index.html" class="view-site">Lihat situs <img src="/images/icons/arrow-up-right.svg" alt=""></a>
+                <span class="admin-user"><img src="/images/icons/user-round.svg" alt=""><span id="adminName">Admin</span></span>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-head">
+                <div class="head-text">
+                    <p class="overline">SSS+DEALER / MOBIL</p>
+                    <h1 id="formTitle">Tambah Mobil</h1>
+                    <p class="head-desc" id="formDesc">Lengkapi detail sebelum diterbitkan.</p>
+                </div>
+                <a href="/admin/" class="btn btn-outline">Kembali ke daftar <img src="/images/icons/arrow-up-right.svg" alt=""></a>
+            </div>
+
+            <p class="admin-msg" id="formMsg"></p>
+
+            <form id="carForm" class="admin-split" style="align-items:flex-start;">
+                <!-- Kolom utama -->
+                <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:24px;">
+                    <!-- 01 INFORMASI UNIT -->
+                    <div class="admin-calendar" style="padding:28px;">
+                        <p class="overline" style="margin-bottom:20px;">01 / INFORMASI UNIT</p>
+                        <div class="form-grid">
+                            <div class="admin-field"><label>Merek *</label><input type="text" id="f_brand" required></div>
+                            <div class="admin-field"><label>Model *</label><input type="text" id="f_name" required></div>
+                            <div class="admin-field"><label>Tahun *</label><input type="number" id="f_year" value="2024" min="1990" max="2030" required></div>
+                            <div class="admin-field"><label>Harga indikatif (Rp) *</label><input type="text" id="f_price" inputmode="numeric" required></div>
+                            <div class="admin-field"><label>Tipe bodi *</label><input type="text" id="f_type" placeholder="Coupe / SUV / Grand Tourer" required></div>
+                            <div class="admin-field"><label>Kelas performa *</label><input type="text" id="f_performance" placeholder="Supercar / GT / SUV" required></div>
+                            <div class="admin-field"><label>Transmisi *</label><input type="text" id="f_transmission" placeholder="Automatic" required></div>
+                            <div class="admin-field"><label>Powertrain / bahan bakar *</label>
+                                <select id="f_powertrain" required>
+                                    <option value="Petrol">Petrol (Bensin)</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                    <option value="Electric">Electric (Listrik)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 02 SPESIFIKASI -->
+                    <div class="admin-calendar" style="padding:28px;">
+                        <p class="overline" style="margin-bottom:20px;">02 / SPESIFIKASI</p>
+                        <div class="form-grid">
+                            <div class="admin-field"><label>Tenaga (PS)</label><input type="number" id="f_horsepower" placeholder="450"></div>
+                            <div class="admin-field"><label>Torsi (Nm)</label><input type="number" id="f_torque" placeholder="530"></div>
+                            <div class="admin-field"><label>0–100 km/jam</label><input type="text" id="f_accel" placeholder="3,7 detik"></div>
+                            <div class="admin-field"><label>Kecepatan maksimum (km/jam)</label><input type="number" id="f_topspeed" placeholder="308"></div>
+                            <div class="admin-field"><label>Penggerak *</label><input type="text" id="f_drivetrain" placeholder="RWD / AWD / FWD" required></div>
+                        </div>
+                    </div>
+
+                    <!-- 03 DESKRIPSI -->
+                    <div class="admin-calendar" style="padding:28px;">
+                        <p class="overline" style="margin-bottom:20px;">03 / DESKRIPSI</p>
+                        <div class="admin-field full"><label>Deskripsi koleksi</label><textarea id="f_description"></textarea></div>
+                    </div>
+                </div>
+
+                <!-- Kolom samping -->
+                <div style="width:320px; max-width:100%; display:flex; flex-direction:column; gap:24px;">
+                    <!-- 04 FOTO -->
+                    <div class="schedule-panel">
+                        <p class="overline">04 / FOTO MOBIL</p>
+
+                        <!-- Dropzone upload -->
+                        <label class="photo-dropzone" id="dropzone">
+                            <input type="file" id="photoFile" accept="image/jpeg,image/png,image/webp" hidden>
+                            <div class="dz-empty" id="dzEmpty">
+                                <img src="/images/icons/plus.svg" alt="">
+                                <span>Klik untuk pilih foto</span>
+                                <small>JPG, PNG, atau WEBP · maks 5MB</small>
+                            </div>
+                            <div class="dz-preview" id="dzPreview" style="display:none;">
+                                <img id="imgPreviewImg" src="" alt="">
+                                <span class="dz-change">Ganti foto</span>
+                            </div>
+                        </label>
+                        <p class="field-hint" id="uploadHint" style="font-size:11px; color:var(--color-muted);">
+                            Pilih foto dari perangkat Anda. Foto akan diunggah otomatis.
+                        </p>
+                        <!-- path hasil upload, dikirim bersama form -->
+                        <input type="hidden" id="f_image" required>
+                    </div>
+
+                    <!-- 05 PUBLIKASI -->
+                    <div class="schedule-panel">
+                        <p class="overline">05 / PUBLIKASI</p>
+                        <h3>Status unit</h3>
+                        <div class="admin-field">
+                            <label>Ketersediaan *</label>
+                            <select id="f_status">
+                                <option value="available">Tersedia</option>
+                                <option value="reserved">Dipesan</option>
+                                <option value="sold">Terjual</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                        <p class="field-hint" style="font-size:11px; color:var(--color-muted);">Terbit menampilkan unit di koleksi pembeli. Draft hanya terlihat oleh admin.</p>
+                        <button type="submit" class="save-btn" id="saveBtn">Simpan Perubahan</button>
+                        <p class="field-hint" style="font-size:11px; color:var(--color-muted);">Harga bersifat indikatif. Pembelian melalui konsultasi WhatsApp, bukan pembayaran di aplikasi.</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/nav-auth.js?v=4"></script>
+    <script src="/js/admin/common.js?v=1"></script>
+    <script src="/js/admin/car-form.js?v=1"></script>
+
+</body>
+
+</html>

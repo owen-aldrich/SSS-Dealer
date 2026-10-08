@@ -1,0 +1,208 @@
+/* ==============================
+   GUIDES PAGE
+================================= */
+
+/* --- Hero --- */
+.guides-hero {
+    min-height: 60vh;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.92) 0%,
+            rgba(0, 0, 0, 0.70) 50%,
+            rgba(0, 0, 0, 0.40) 100%
+        ),
+        url("../images/hero.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    padding-top: 100px;
+}
+
+.guides-hero-content {
+    width: 90%;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.guides-subtitle {
+    color: var(--color-champagne);
+
+    font-size: 14px;
+    letter-spacing: 5px;
+
+    margin-bottom: 20px;
+}
+
+.guides-hero h1 {
+    font-size: clamp(40px, 6vw, 80px);
+
+    line-height: 1.05;
+    letter-spacing: 2px;
+
+    margin-bottom: 25px;
+}
+
+.guides-description {
+    max-width: 600px;
+
+    color: #d0d0d0;
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* --- Grid Section --- */
+.guides-grid-section {
+    padding: 100px 5%;
+
+    background-color: #0a0a0a;
+}
+
+.guides-grid {
+    max-width: 1400px;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+
+/* --- Card --- */
+.guide-card {
+    background-color: #111;
+    border: 1px solid #2a2a2a;
+
+    overflow: hidden;
+
+    transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.guide-card:hover {
+    transform: translateY(-6px);
+
+    border-color: var(--color-champagne);
+
+    box-shadow: 0 12px 40px rgba(195, 171, 132, 0.08);
+}
+
+
+/* Card Image */
+.guide-card-image {
+    position: relative;
+
+    width: 100%;
+    height: 220px;
+
+    overflow: hidden;
+}
+
+.guide-card-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    display: block;
+
+    transition: transform 0.5s ease;
+}
+
+.guide-card:hover .guide-card-image img {
+    transform: scale(1.06);
+}
+
+.guide-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+
+    padding: 5px 12px;
+
+    background-color: rgba(0, 0, 0, 0.75);
+    border: 1px solid var(--color-champagne);
+
+    color: var(--color-champagne);
+
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+
+/* Card Body */
+.guide-card-body {
+    padding: 28px 25px 30px;
+}
+
+.guide-card-body h3 {
+    font-size: 19px;
+    line-height: 1.35;
+
+    margin-bottom: 14px;
+
+    transition: color 0.3s ease;
+}
+
+.guide-card:hover .guide-card-body h3 {
+    color: var(--color-champagne);
+}
+
+.guide-card-body p {
+    color: #999;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    margin-bottom: 20px;
+}
+
+.guide-read-more {
+    color: var(--color-champagne);
+
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    transition: color 0.3s ease;
+}
+
+.guide-read-more:hover {
+    color: white;
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 1000px) {
+    .guides-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .guides-hero {
+        min-height: 50vh;
+    }
+
+    .guides-hero h1 {
+        font-size: 36px;
+    }
+
+    .guides-description {
+        font-size: 15px;
+    }
+
+    .guides-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .guide-card-image {
+        height: 200px;
+    }
+}

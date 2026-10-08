@@ -1,0 +1,379 @@
+/* ==================================================
+   ACCOUNT PAGE — SSS+Dealer
+   Mengikuti Figma "Akun Saya" (28:236) + "Favorit" (4:10676)
+   Reuse .site-nav/.site-footer/.btn/.v-card/.overline (home.css)
+===================================================== */
+
+.account {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Header + profile ---------- */
+.account-head {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: var(--page-pad, 72px) var(--page-pad, 72px) 0;
+}
+
+.account-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.account-intro h1 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: var(--fs-heading);
+    line-height: 1.15;
+    color: var(--color-ivory);
+}
+
+.account-intro .lead { font-size: 16px; line-height: 1.6; color: var(--color-muted); }
+
+.profile-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    background-color: var(--color-surface);
+    border: var(--border-hair);
+    border-radius: var(--radius-card);
+}
+
+.profile-card .avatar-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.profile-card .avatar-wrap img {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-pill);
+    object-fit: cover;
+    display: block;
+}
+
+.profile-card .photo-upload {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-champagne);
+    color: #151718;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    cursor: pointer;
+    border: 2px solid var(--color-surface);
+}
+
+.profile-card .profile-identity { display: flex; flex-direction: column; gap: 8px; }
+.profile-card .profile-identity h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 27px;
+    color: var(--color-ivory);
+    line-height: 1.15;
+}
+.profile-card .profile-identity .p-email { font-size: 14px; color: var(--color-muted); }
+.profile-card .profile-identity .role-badge {
+    align-self: flex-start;
+    margin-top: 2px;
+    padding: 3px 10px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--color-champagne);
+    background: rgba(195, 171, 132, 0.12);
+    border: 1px solid rgba(195, 171, 132, 0.35);
+    border-radius: var(--radius-pill);
+}
+
+/* ---------- Tabs ---------- */
+.account-tabs {
+    display: flex;
+    gap: 48px;
+    border-bottom: var(--border-hair);
+}
+
+.account-tab {
+    padding: 20px 0 18px;
+    font-size: 14px;
+    color: var(--color-muted);
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    margin-bottom: -1px;
+}
+
+.account-tab.active {
+    color: var(--color-champagne);
+    border-bottom-color: var(--color-champagne);
+}
+
+/* ---------- Panels ---------- */
+.account-body {
+    padding: 40px var(--page-pad, 72px) var(--page-pad, 72px);
+}
+
+.account-panel { display: none; }
+.account-panel.active { display: block; }
+
+/* Favorites grid (reuse .v-card) */
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.fav-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.fav-controls .select-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+.fav-controls .fav-sort { font-size: 13px; color: var(--color-muted); }
+
+/* Favorite card extra actions (below card) */
+.fav-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.fav-extra .btn { width: 100%; }
+
+.fav-extra .remove-fav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: none;
+    border: 0;
+    color: var(--color-muted);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.fav-extra .remove-fav-btn img { width: 14px; height: 14px; }
+.fav-extra .remove-fav-btn:hover { color: var(--color-champagne); }
+
+.fav-cell { display: flex; flex-direction: column; }
+
+/* Empty state */
+.empty-state {
+    color: var(--color-muted);
+    font-size: 15px;
+    padding: 40px 0;
+}
+
+.empty-state a {
+    color: var(--color-champagne);
+    border-bottom: 1px solid rgba(195, 171, 132, 0.35);
+}
+
+/* ---------- Settings ---------- */
+.settings-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.settings-intro h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 36px;
+    color: var(--color-ivory);
+    line-height: 1.15;
+}
+
+.settings-intro p { font-size: 14px; line-height: 1.6; color: var(--color-muted); }
+
+.settings-section {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    padding-top: 32px;
+    border-top: var(--border-hair);
+}
+
+.settings-section .section-side {
+    width: 320px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.settings-section .section-side h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 27px;
+    color: var(--color-ivory);
+    line-height: 1.15;
+}
+
+.settings-section .section-side p { font-size: 14px; line-height: 1.6; color: var(--color-muted); }
+
+.settings-section .section-fields {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.field-row {
+    display: flex;
+    gap: 24px;
+}
+
+.field {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.field label { font-size: 12px; color: var(--color-muted); }
+
+.field input,
+.field textarea {
+    height: 52px;
+    padding: 0 16px;
+    background-color: var(--color-canvas);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+}
+
+.field textarea { height: auto; min-height: 90px; padding: 14px 16px; resize: vertical; }
+.field input:focus,
+.field textarea:focus { border-color: var(--color-champagne); }
+
+.field.readonly .readonly-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 52px;
+    padding: 0 16px;
+    background-color: var(--color-raised);
+    border-radius: var(--radius-control);
+}
+
+.field.readonly .readonly-box span { flex: 1; font-size: 14px; color: var(--color-muted); }
+.field.readonly .readonly-box img { width: 16px; height: 16px; }
+.field .field-hint { font-size: 11px; line-height: 1.6; color: var(--color-muted); }
+
+/* Settings action bar */
+.settings-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 32px;
+    margin-top: 32px;
+    border-top: var(--border-hair);
+    flex-wrap: wrap;
+}
+
+.settings-actions .action-note { font-size: 12px; color: var(--color-muted); }
+.settings-actions .action-buttons { display: flex; gap: 16px; }
+
+.logout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    height: 50px;
+    padding: 0 22px;
+    background-color: var(--color-canvas);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.logout-btn img { width: 17px; height: 17px; }
+.logout-btn:hover { border-color: var(--color-champagne); }
+
+.save-btn {
+    height: 50px;
+    padding: 0 22px;
+    background-color: var(--color-champagne);
+    border: 1px solid var(--color-champagne);
+    border-radius: var(--radius-control);
+    color: #151718;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.save-btn:hover { background-color: var(--color-champagne-hover); }
+
+.form-message { font-size: 13px; margin-bottom: 4px; }
+.form-message.success { color: var(--color-success); }
+.form-message.error { color: var(--color-error); }
+
+/* Compare history (dipertahankan, gaya ringkas) */
+.history-list { display: flex; flex-direction: column; gap: 12px; }
+.history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    background-color: var(--color-surface);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+}
+.history-item .history-cars { font-size: 14px; color: var(--color-ivory); }
+.history-item .history-date { font-size: 12px; color: var(--color-muted); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+    .account-head { padding: 40px 40px 0; }
+    .account-body { padding: 32px 40px 40px; }
+    .settings-section { flex-direction: column; gap: 24px; }
+    .settings-section .section-side { width: 100%; }
+    .favorites-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 700px) {
+    .account-head { padding: 24px 24px 0; }
+    .account-body { padding: 24px; }
+    .account-intro h1 { font-size: 34px; }
+    .account-tabs { gap: 24px; overflow-x: auto; }
+    .favorites-grid { grid-template-columns: 1fr; }
+    .field-row { flex-direction: column; }
+    .settings-actions { flex-direction: column; align-items: flex-start; }
+}

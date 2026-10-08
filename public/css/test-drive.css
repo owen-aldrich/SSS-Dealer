@@ -1,0 +1,320 @@
+/* ==================================================
+   TEST DRIVE — SSS+Dealer
+   Figma "Pemesanan test drive" (4:10819) + "Konfirmasi" (4:10969)
+   Reuse .site-nav/.site-footer/.btn/.overline (home.css)
+===================================================== */
+
+.td {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: var(--page-pad, 72px);
+}
+
+.td-intro { display: flex; flex-direction: column; gap: 18px; }
+.td-intro h1 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: var(--fs-heading);
+    line-height: 1.15;
+    color: var(--color-ivory);
+}
+.td-intro .lead { font-size: 16px; line-height: 1.6; color: var(--color-muted); max-width: 720px; }
+
+.td-steps {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--color-muted);
+}
+.td-steps .num { color: var(--color-champagne); margin-right: 8px; }
+
+/* ---------- Layout: form + summary ---------- */
+.td-layout {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+}
+
+.td-form {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.td-section { display: flex; flex-direction: column; gap: 20px; }
+
+.td-section .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+}
+.td-section .section-head .s-num { font-size: 13px; color: var(--color-champagne); }
+.td-section .section-head h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 27px;
+    color: var(--color-ivory);
+}
+
+.td-field { display: flex; flex-direction: column; gap: 10px; }
+.td-field label { font-size: 12px; color: var(--color-muted); }
+
+.td-field input,
+.td-field select,
+.td-field textarea {
+    height: 52px;
+    padding: 0 16px;
+    background-color: var(--color-canvas);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+}
+
+.td-field textarea { height: auto; min-height: 90px; padding: 14px 16px; resize: vertical; }
+.td-field input:focus,
+.td-field select:focus,
+.td-field textarea:focus { border-color: var(--color-champagne); }
+
+.td-field select {
+    appearance: none;
+    background-image: url("../images/icons/chevron-down.svg");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 44px;
+}
+
+.td-field select option { background-color: var(--color-surface); color: var(--color-ivory); }
+
+.td-row { display: flex; gap: 24px; }
+.td-row .td-field { flex: 1; min-width: 0; }
+
+/* Address line */
+.td-address {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background-color: var(--color-surface);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+    font-size: 13px;
+    color: var(--color-muted);
+}
+.td-address img { width: 16px; height: 16px; }
+
+/* Time slots */
+.td-slots { display: flex; gap: 12px; flex-wrap: wrap; }
+.td-slot {
+    flex: 1;
+    min-width: 90px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--color-canvas);
+    border: var(--border-hair);
+    border-radius: var(--radius-control);
+    color: var(--color-ivory);
+    font-size: 13px;
+    cursor: pointer;
+}
+.td-slot.active {
+    background-color: var(--color-champagne);
+    border-color: var(--color-champagne);
+    color: #151718;
+}
+.td-note { font-size: 12px; line-height: 1.6; color: var(--color-muted); }
+
+/* Agreement */
+.td-agree {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--color-muted);
+    cursor: pointer;
+}
+.td-agree input { margin-top: 2px; accent-color: var(--color-champagne); }
+
+.hr-divider { width: 100%; height: 1px; background: var(--color-border); border: 0; }
+
+/* ---------- Summary (sticky) ---------- */
+.td-summary {
+    width: 380px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    background-color: var(--color-surface);
+    border: var(--border-hair);
+    border-radius: var(--radius-card);
+}
+
+.td-summary .sum-photo { height: 180px; border-radius: var(--radius-control); overflow: hidden; }
+.td-summary .sum-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.td-summary .sum-name {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 27px;
+    color: var(--color-ivory);
+}
+.td-summary .sum-meta { font-size: 13px; color: var(--color-muted); }
+.td-summary .sum-price { font-size: 20px; color: var(--color-champagne); }
+
+.td-summary .sum-rows { display: flex; flex-direction: column; gap: 12px; }
+.td-summary .sum-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 13px; }
+.td-summary .sum-row .k { color: var(--color-muted); }
+.td-summary .sum-row .v { color: var(--color-ivory); text-align: right; }
+
+.td-summary .sum-loc { display: flex; gap: 10px; font-size: 13px; color: var(--color-muted); }
+.td-summary .sum-loc img { width: 16px; height: 16px; flex-shrink: 0; }
+
+.td-summary .sum-fee { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+.td-summary .sum-fee .k { color: var(--color-muted); }
+.td-summary .sum-fee .v { color: var(--color-ivory); }
+
+.td-summary .btn { width: 100%; }
+
+.td-summary .sum-help {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--color-muted);
+}
+.td-summary .sum-help img { width: 16px; height: 16px; }
+
+.form-message { font-size: 13px; }
+.form-message.success { color: var(--color-success); }
+.form-message.error { color: var(--color-error); }
+
+/* ========== CONFIRMATION VIEW ========== */
+.td-confirm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    padding: var(--page-pad, 72px);
+}
+
+.confirm-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    max-width: 760px;
+}
+
+.confirm-head .check-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-champagne);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-champagne);
+    font-size: 22px;
+}
+
+.confirm-head h1 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: var(--fs-heading);
+    line-height: 1.2;
+    color: var(--color-ivory);
+}
+.confirm-head .confirm-desc { font-size: 16px; line-height: 1.6; color: var(--color-muted); }
+
+.confirm-card {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    max-width: 900px;
+    background-color: var(--color-surface);
+    border: var(--border-hair);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+}
+
+.confirm-card .cc-photo { width: 360px; flex-shrink: 0; display: flex; flex-direction: column; }
+.confirm-card .cc-photo .cc-img { height: 220px; }
+.confirm-card .cc-photo .cc-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.confirm-card .cc-photo .cc-caption { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+.confirm-card .cc-photo .cc-brand { font-size: 11px; letter-spacing: 1px; color: var(--color-champagne); }
+.confirm-card .cc-photo .cc-name { font-family: var(--font-serif); font-size: 24px; color: var(--color-ivory); }
+.confirm-card .cc-photo .cc-meta { font-size: 12px; color: var(--color-muted); }
+.confirm-card .cc-photo .cc-price { font-size: 18px; color: var(--color-champagne); margin-top: 4px; }
+
+.confirm-card .cc-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    border-left: var(--border-hair);
+}
+.confirm-card .cc-detail .cc-top { display: flex; align-items: center; justify-content: space-between; }
+.confirm-card .cc-detail .cc-top .overline { font-weight: 600; }
+.confirm-card .cc-detail .cc-confirmed { font-size: 12px; color: var(--color-success); }
+.confirm-card .cc-detail .cc-date { font-family: var(--font-serif); font-size: 28px; color: var(--color-ivory); }
+.confirm-card .cc-detail .sum-rows { display: flex; flex-direction: column; gap: 12px; }
+
+.confirm-next { display: flex; flex-direction: column; gap: 32px; width: 100%; max-width: 900px; }
+.confirm-next h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: var(--fs-section);
+    color: var(--color-ivory);
+}
+.confirm-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.confirm-step { display: flex; flex-direction: column; gap: 10px; }
+.confirm-step .cs-num { font-size: 28px; color: var(--color-champagne); }
+.confirm-step h3 { font-size: 15px; color: var(--color-ivory); font-weight: 600; }
+.confirm-step p { font-size: 14px; line-height: 1.6; color: var(--color-muted); }
+
+.confirm-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    max-width: 900px;
+    flex-wrap: wrap;
+}
+.confirm-actions .ca-buttons { display: flex; gap: 16px; }
+.confirm-actions .ca-help { font-size: 13px; color: var(--color-muted); }
+.confirm-actions .ca-help a { color: var(--color-champagne); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+    .td, .td-confirm { padding: 40px; }
+    .td-layout { flex-direction: column; }
+    .td-summary { width: 100%; position: static; }
+}
+@media (max-width: 700px) {
+    .td, .td-confirm { padding: 24px; }
+    .td-intro h1, .confirm-head h1 { font-size: 32px; }
+    .td-row { flex-direction: column; }
+    .confirm-card { flex-direction: column; }
+    .confirm-card .cc-photo { width: 100%; }
+    .confirm-card .cc-detail { border-left: 0; border-top: var(--border-hair); }
+    .confirm-steps { grid-template-columns: 1fr; }
+    .confirm-actions { flex-direction: column; align-items: flex-start; }
+    .td-slots .td-slot { min-width: calc(50% - 6px); flex: none; }
+}

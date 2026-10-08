@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Test Drive | Admin SSS+Dealer</title>
+    <link rel="stylesheet" href="/css/style.css?v=4">
+    <link rel="stylesheet" href="/css/admin.css?v=1">
+</head>
+
+<body class="admin-body">
+
+    <aside class="admin-sidebar">
+        <div class="side-brand">
+            <div class="b-word">SSS+Dealer</div>
+            <div class="b-sub">ADMINISTRASI</div>
+        </div>
+        <nav class="side-nav">
+            <a href="/admin/" class="side-link"><img src="/images/icons/car-front.svg" alt="">Mobil</a>
+            <a href="/admin/test-drive.html" class="side-link active"><img src="/images/icons/calendar-days.svg" alt="">Test Drive</a>
+            <a href="/admin/leads.html" class="side-link"><img src="/images/icons/message-circle.svg" alt="">Lead</a>
+            <button type="button" class="side-link side-logout" onclick="adminLogout()"><img src="/images/icons/log-out.svg" alt="">Keluar</button>
+        </nav>
+        <div class="side-foot">SSS+Dealer Jakarta Selatan<br>Panel pengelolaan · 2026</div>
+    </aside>
+
+    <div class="admin-main">
+        <div class="admin-topbar">
+            <span class="crumb">Administrasi / Test Drive</span>
+            <div class="topbar-right">
+                <a href="/index.html" class="view-site">Lihat situs <img src="/images/icons/arrow-up-right.svg" alt=""></a>
+                <span class="admin-user"><img src="/images/icons/user-round.svg" alt=""><span id="adminName">Admin</span></span>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-head">
+                <div class="head-text">
+                    <p class="overline">SSS+DEALER / TEST DRIVE</p>
+                    <h1>Kelola Test Drive</h1>
+                    <p class="head-desc">Tinjau permintaan dan atur pengalaman personal sesuai ketersediaan unit.</p>
+                </div>
+            </div>
+
+            <div class="admin-search">
+                <img src="/images/icons/search.svg" alt="">
+                <input type="text" id="tdSearch" placeholder="Cari pembeli, mobil, atau kode booking...">
+            </div>
+
+            <div class="admin-filters">
+                <div class="chip-row" id="tdChips">
+                    <button class="chip active" data-status="all">Semua</button>
+                    <button class="chip" data-status="pending">Menunggu</button>
+                    <button class="chip" data-status="approved">Disetujui</button>
+                    <button class="chip" data-status="rejected">Ditolak</button>
+                </div>
+            </div>
+
+            <div class="admin-table" id="tdTable">
+                <div class="t-head" style="grid-template-columns: 1.6fr 1.6fr 1.2fr 1fr 1.4fr;">
+                    <span>PEMBELI</span><span>MOBIL</span><span>JADWAL · WIB</span><span>STATUS</span><span>TINDAKAN</span>
+                </div>
+                <div id="tdRows"></div>
+            </div>
+            <p class="admin-empty" id="tdEmpty" style="display:none;">Belum ada permintaan test drive.</p>
+
+            <div class="admin-meta">
+                <span>Panel pengelolaan · SSS+Dealer Jakarta Selatan</span>
+                <span id="tdCount"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/nav-auth.js?v=4"></script>
+    <script src="/js/admin/common.js?v=1"></script>
+    <script src="/js/admin/test-drive.js?v=1"></script>
+
+</body>
+
+</html>
