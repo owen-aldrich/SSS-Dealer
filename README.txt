@@ -16,7 +16,7 @@ Dibangun untuk para penggemar otomotif — dari browsing koleksi hingga booking 
 | ORM         | Prisma                                         |
 | Database    | PostgreSQL (Neon — cloud)                      |
 | Auth        | JWT (jsonwebtoken + bcryptjs)                  |
-| File Upload | Multer (lokal, folder uploads/)                |
+| File Upload | Multer + Cloudinary (cloud storage)            |
 
 ---
 
@@ -53,7 +53,7 @@ project/
 ├── prisma/
 │   ├── schema.prisma           # Skema database PostgreSQL
 │   └── seed.js                 # Seed data mobil
-├── uploads/                    # File unggahan (foto mobil & profil), tidak di-commit
+├── uploads/                    # File unggahan lokal (hanya development), tidak di-commit
 ├── package.json
 ├── .env.example                # Template environment variables
 └── .env                        # Environment variables lokal (JANGAN di-commit)
@@ -110,6 +110,9 @@ JWT_SECRET=isi_dengan_string_random_panjang_minimal_32_karakter
 JWT_EXPIRES_IN=7d
 PORT=3000
 NODE_ENV=development
+CLOUDINARY_CLOUD_NAME=nama_cloud_kamu
+CLOUDINARY_API_KEY=api_key_kamu
+CLOUDINARY_API_SECRET=api_secret_kamu
 ```
 
 Untuk generate JWT_SECRET yang aman, jalankan:
@@ -182,11 +185,15 @@ Setelah server berjalan, coba urutan berikut:
 | POST   | /api/auth/check-identifier   | —    | Cek email/username duplikat |
 
 ### Cars
-| Method | Endpoint                  | Auth | Deskripsi                  |
-|--------|---------------------------|------|----------------------------|
-| GET    | /api/cars                 | —    | Semua mobil (support filter) |
-| GET    | /api/cars/:id             | —    | Detail satu mobil          |
-| GET    | /api/cars/by-ids?ids=1,2  | —    | Beberapa mobil (compare)   |
+| Method | Endpoint                  | Auth  | Deskripsi                  |
+|--------|---------------------------|-------|----------------------------|
+| GET    | /api/cars                 | —     | Semua mobil (support filter) |
+| GET    | /api/cars/:id             | —     | Detail satu mobil          |
+| GET    | /api/cars/by-ids?ids=1,2  | —     | Beberapa mobil (compare)   |
+| POST   | /api/cars/upload-image    | Admin | Upload foto mobil ke Cloudinary |
+| POST   | /api/cars                 | Admin | Tambah mobil baru          |
+| PUT    | /api/cars/:id             | Admin | Edit data mobil            |
+| DELETE | /api/cars/:id             | Admin | Hapus mobil                |
 
 ### Favorites
 | Method | Endpoint                        | Auth | Deskripsi            |
@@ -209,9 +216,13 @@ Setelah server berjalan, coba urutan berikut:
 | POST   | /api/account/photo   | ✓    | Upload foto profil    |
 
 ### Test Drive
-| Method | Endpoint          | Auth     | Deskripsi             |
-|--------|-------------------|----------|-----------------------|
-| POST   | /api/test-drive   | opsional | Booking test drive    |
+| Method | Endpoint                              | Auth     | Deskripsi                        |
+|--------|---------------------------------------|----------|----------------------------------|
+| POST   | /api/test-drive                       | opsional | Booking test drive               |
+| GET    | /api/test-drive/me                    | ✓        | Riwayat test drive user          |
+| GET    | /api/test-drive/booked-slots          | —        | Slot jam terisi (per mobil+tgl)  |
+| GET    | /api/test-drive                       | Admin    | Semua booking (admin)            |
+| PATCH  | /api/test-drive/:id                   | Admin    | Update status/jadwal (admin)     |
 
 ---
 
@@ -237,8 +248,8 @@ Saat logout, keduanya dihapus dari `localStorage`.
 
 - **File `.env`** berisi kredensial sensitif. Pastikan sudah ada di `.gitignore`.
 
-- **Foto profil** tersimpan lokal di `uploads/profile_photos/`.
-  Untuk production, pertimbangkan migrasi ke cloud storage (Cloudinary, S3, dll).
+- **Foto profil & foto mobil upload** tersimpan di **Cloudinary** (cloud storage).
+  Tidak hilang saat redeploy. Pastikan env vars CLOUDINARY_* sudah diset.
 
 - **Featured Cars di homepage** masih statis/hardcode, tidak dari database.
   Tombol favorit & compare berfungsi penuh di `cars.html`.
