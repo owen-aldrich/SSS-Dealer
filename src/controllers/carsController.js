@@ -220,15 +220,17 @@ async function deleteCar(req, res) {
 
 // =============================================================
 // POST /api/cars/upload-image — unggah foto mobil (admin)
-// Multer dikonfigurasi di route. Kembalikan path relatif.
+// Multer + Cloudinary dikonfigurasi di route.
+// req.file.path = URL Cloudinary lengkap, req.file.filename = public_id
 // =============================================================
 async function uploadCarImage(req, res) {
   try {
     if (!req.file) {
       return res.status(400).json({ status: "error", message: "Tidak ada file foto yang diunggah." });
     }
-    const relativePath = "uploads/car_photos/" + req.file.filename;
-    return res.json({ status: "success", message: "Foto berhasil diunggah.", image: relativePath });
+    // Cloudinary storage menyimpan URL publik di req.file.path
+    const imageUrl = req.file.path;
+    return res.json({ status: "success", message: "Foto berhasil diunggah.", image: imageUrl });
   } catch (err) {
     console.error("uploadCarImage error:", err);
     return res.status(500).json({ status: "error", message: "Gagal mengunggah foto." });

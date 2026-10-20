@@ -52,6 +52,8 @@ fetch("/api/cars")
       sel.value = preselectId;
     }
     updateSummary();
+    // Fetch booked slots setelah cars loaded & tanggal default sudah diset
+    refreshBookedSlots();
   })
   .catch(() => {});
 
@@ -99,12 +101,51 @@ el("tdShowroom").addEventListener("change", () => {
 /* ---------- Time slots ---------- */
 el("tdSlots").querySelectorAll(".td-slot").forEach((btn) => {
   btn.addEventListener("click", () => {
+    if (btn.disabled) return;
     el("tdSlots").querySelectorAll(".td-slot").forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     selectedTime = btn.dataset.time;
     updateSummary();
   });
 });
+
+/* ---------- Fetch booked slots & disable tombol ---------- */
+async function refreshBookedSlots() {
+  const carId = el("tdCar").value;
+  const date  = el("tdDate").value;
+  if (!carId || !date) return;
+
+  try {
+    const res    = await fetch(`/api/test-drive/booked-slots?car_id=${carId}&date=${date}`);
+    const result = await res.json();
+    const booked = result.booked || [];
+
+    el("tdSlots").querySelectorAll(".td-slot").forEach((btn) => {
+      const time    = btn.dataset.time;
+      const isBooked = booked.includes(time);
+      btn.disabled  = isBooked;
+      btn.title     = isBooked ? "Slot ini sudah dipesan" : "";
+
+      // Kalau slot aktif sekarang ternyata sudah terbooked, reset ke slot pertama yang tersedia
+      if (isBooked && btn.classList.contains("active")) {
+        btn.classList.remove("active");
+        const firstAvailable = el("tdSlots").querySelector(".td-slot:not([disabled])");
+        if (firstAvailable) {
+          firstAvailable.classList.add("active");
+          selectedTime = firstAvailable.dataset.time;
+          updateSummary();
+        }
+      }
+    });
+  } catch (_) {
+    // Gagal fetch booked slots — biarkan semua slot aktif
+  }
+}
+
+el("tdCar").addEventListener("change", refreshBookedSlots);
+el("tdDate").addEventListener("change", refreshBookedSlots);
+
+// Fetch saat halaman pertama dimuat — sudah dipindah ke dalam callback fetch cars di atas
 
 /* ---------- Submit ---------- */
 el("testDriveForm").addEventListener("submit", (e) => {

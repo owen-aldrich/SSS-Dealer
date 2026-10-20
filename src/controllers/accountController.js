@@ -3,9 +3,8 @@
 // =============================================================
 
 const bcrypt = require("bcryptjs");
-const path = require("path");
-const fs = require("fs");
 const prisma = require("../lib/prisma");
+const { cloudinary } = require("../config/cloudinary");
 
 // Helper: buang password dari response
 function safeUser(user) {
@@ -88,7 +87,8 @@ async function updateProfile(req, res) {
 
 // =============================================================
 // POST /api/account/photo — upload foto profil
-// Menggunakan multer (dikonfigurasi di route)
+// Menggunakan multer + Cloudinary (dikonfigurasi di route)
+// req.file.path = URL Cloudinary, req.file.filename = public_id
 // =============================================================
 async function uploadPhoto(req, res) {
   try {
@@ -98,25 +98,26 @@ async function uploadPhoto(req, res) {
       return res.status(400).json({ status: "error", message: "Tidak ada file foto yang diupload." });
     }
 
-    // Path relatif yang disimpan di DB (dari root project)
-    const relativePath = "uploads/profile_photos/" + req.file.filename;
+    // URL publik Cloudinary
+    const photoUrl = req.file.path;
 
-    // Hapus foto lama kalau ada
+    // Hapus foto lama dari Cloudinary kalau ada
     const currentUser = await prisma.user.findUnique({ where: { id: userId }, select: { photo: true } });
-    if (currentUser?.photo) {
-      const oldPath = path.join(require("../config/paths").ROOT_DIR, currentUser.photo);
-      if (fs.existsSync(oldPath)) {
-        fs.unlinkSync(oldPath);
+    if (currentUser?.photo && currentUser.photo.includes("cloudinary.com")) {
+      // Ambil public_id dari URL (format: .../sss-dealer/profiles/namafile)
+      const matches = currentUser.photo.match(/sss-dealer\/profiles\/[^.]+/);
+      if (matches) {
+        await cloudinary.uploader.destroy(matches[0]).catch(() => {}); // silent fail
       }
     }
 
-    // Simpan path baru ke DB
-    await prisma.user.update({ where: { id: userId }, data: { photo: relativePath } });
+    // Simpan URL baru ke DB
+    await prisma.user.update({ where: { id: userId }, data: { photo: photoUrl } });
 
     return res.json({
       status: "success",
       message: "Foto profil berhasil diperbarui.",
-      photo: relativePath,
+      photo: photoUrl,
     });
   } catch (err) {
     console.error("uploadPhoto error:", err);

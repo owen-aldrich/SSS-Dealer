@@ -133,6 +133,17 @@
     border-color: var(--color-champagne);
     color: #151718;
 }
+.td-slot:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    pointer-events: auto; /* supaya tooltip title tetap muncul saat hover */
+}
+.td-slot:disabled::after {
+    content: " · Penuh";
+    font-size: 11px;
+    opacity: 0.8;
+}
 .td-note { font-size: 12px; line-height: 1.6; color: var(--color-muted); }
 
 /* Agreement */

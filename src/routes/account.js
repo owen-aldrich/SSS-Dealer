@@ -7,27 +7,13 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
+const { profileStorage } = require("../config/cloudinary");
 const { getProfile, updateProfile, uploadPhoto } = require("../controllers/accountController");
 const { requireAuth } = require("../middleware/auth");
 
 // =============================================================
-// Konfigurasi Multer untuk upload foto profil
+// Konfigurasi Multer untuk upload foto profil (Cloudinary)
 // =============================================================
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    const uploadDir = path.join(require("../config/paths").UPLOADS_DIR, "profile_photos");
-    // Buat folder kalau belum ada
-    const fs = require("fs");
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-    cb(null, uploadDir);
-  },
-  filename(req, file, cb) {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `user_${req.user.id}_${Date.now()}${ext}`);
-  },
-});
-
 const fileFilter = (req, file, cb) => {
   const allowed = ["image/jpeg", "image/png", "image/webp"];
   if (allowed.includes(file.mimetype)) {
@@ -38,7 +24,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage,
+  storage: profileStorage,
   fileFilter,
   limits: { fileSize: 3 * 1024 * 1024 }, // 3MB
 });

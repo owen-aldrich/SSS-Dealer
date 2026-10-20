@@ -182,4 +182,36 @@ async function updateTestDrive(req, res) {
   }
 }
 
-module.exports = { bookTestDrive, myTestDrives, listTestDrives, updateTestDrive };
+// =============================================================
+// GET /api/test-drive/booked-slots?car_id=X&date=YYYY-MM-DD
+// Return daftar jam yang sudah terisi (pending/approved) untuk
+// mobil + tanggal tertentu. Dipakai frontend untuk disable tombol slot.
+// =============================================================
+async function bookedSlots(req, res) {
+  try {
+    const carId = parseInt(req.query.car_id);
+    const date  = req.query.date; // format: YYYY-MM-DD
+
+    if (!carId || carId <= 0 || !date) {
+      return res.json({ status: "success", booked: [] });
+    }
+
+    const rows = await prisma.testDrive.findMany({
+      where: {
+        carId,
+        preferredDate: new Date(date),
+        status: { in: ["pending", "approved"] },
+        preferredTime: { not: null },
+      },
+      select: { preferredTime: true },
+    });
+
+    const booked = rows.map((r) => r.preferredTime);
+    return res.json({ status: "success", booked });
+  } catch (err) {
+    console.error("bookedSlots error:", err);
+    return res.status(500).json({ status: "error", booked: [] });
+  }
+}
+
+module.exports = { bookTestDrive, myTestDrives, listTestDrives, updateTestDrive, bookedSlots };

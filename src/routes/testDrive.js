@@ -5,8 +5,11 @@
 
 const express = require("express");
 const router = express.Router();
-const { bookTestDrive, myTestDrives, listTestDrives, updateTestDrive } = require("../controllers/testDriveController");
+const { bookTestDrive, myTestDrives, listTestDrives, updateTestDrive, bookedSlots } = require("../controllers/testDriveController");
 const { optionalAuth, requireAuth, requireAdmin } = require("../middleware/auth");
+
+// GET /api/test-drive/booked-slots?car_id=X&date=YYYY-MM-DD — slot yang sudah terisi (publik)
+router.get("/booked-slots", bookedSlots);
 
 // GET /api/test-drive/me — riwayat test drive user login
 router.get("/me", requireAuth, myTestDrives);
