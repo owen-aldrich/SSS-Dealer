@@ -133,13 +133,15 @@ function renderCars(cars) {
 
     const waMsg = encodeURIComponent(`Halo SSS+Dealer, saya tertarik dengan ${car.brand} ${car.name}.`);
 
+    const isReserved = car.status === "reserved";
+
     const card = document.createElement("article");
-    card.className = "v-card" + (inCompare ? " selected" : "");
+    card.className = "v-card" + (inCompare ? " selected" : "") + (isReserved ? " reserved-card" : "");
     card.innerHTML = `
       <div class="v-visual">
         <img class="photo" src="${car.image}" alt="${car.brand} ${car.name}" loading="lazy">
         ${FavStore.buttonHtml(car.id)}
-        <span class="avail-badge">TERSEDIA</span>
+        <span class="avail-badge${isReserved ? " reserved" : ""}">${isReserved ? "RESERVED" : "TERSEDIA"}</span>
       </div>
       <div class="v-info">
         <p class="brand-year">${car.brand.toUpperCase()} · ${year}</p>

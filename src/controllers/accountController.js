@@ -2,28 +2,25 @@
 // Account Controller — get profile, update profile, upload photo
 // =============================================================
 
-const bcrypt = require("bcryptjs");
-const prisma = require("../lib/prisma");
+const bcrypt     = require("bcryptjs");
+const db         = require("../lib/db");
 const { cloudinary } = require("../config/cloudinary");
 
-// Helper: buang password dari response
 function safeUser(user) {
   const { password, ...rest } = user;
   return rest;
 }
 
 // =============================================================
-// GET /api/account — ambil profil user yang sedang login
+// GET /api/account
 // =============================================================
 async function getProfile(req, res) {
   try {
-    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
-
-    if (!user) {
+    const [rows] = await db.query("SELECT * FROM users WHERE id = ? LIMIT 1", [req.user.id]);
+    if (rows.length === 0) {
       return res.status(404).json({ status: "error", message: "User tidak ditemukan." });
     }
-
-    return res.json({ status: "success", user: safeUser(user) });
+    return res.json({ status: "success", user: safeUser(rows[0]) });
   } catch (err) {
     console.error("getProfile error:", err);
     return res.status(500).json({ status: "error", message: "Gagal mengambil profil." });
@@ -31,7 +28,7 @@ async function getProfile(req, res) {
 }
 
 // =============================================================
-// PUT /api/account — update profil (nama, username, usia, alamat, password)
+// PUT /api/account
 // =============================================================
 async function updateProfile(req, res) {
   try {
@@ -43,40 +40,32 @@ async function updateProfile(req, res) {
     }
 
     // Cek username tidak dipakai user lain
-    const conflict = await prisma.user.findFirst({
-      where: { username, NOT: { id: userId } },
-      select: { id: true },
-    });
-
-    if (conflict) {
+    const [conflict] = await db.query(
+      "SELECT id FROM users WHERE username = ? AND id != ? LIMIT 1",
+      [username, userId]
+    );
+    if (conflict.length > 0) {
       return res.status(409).json({ status: "error", message: "Username sudah dipakai user lain." });
     }
 
-    const updateData = {
-      fullname,
-      username,
-      age: age ? parseInt(age) : null,
-      address: address || null,
-    };
+    const updateFields = { fullname, username, age: age ? parseInt(age) : null, address: address || null };
 
-    // Kalau user mau ganti password
     if (new_password) {
       if (new_password.length < 6) {
         return res.status(400).json({ status: "error", message: "Password baru minimal 6 karakter." });
       }
 
-      // Verifikasi password lama
-      const currentUser = await prisma.user.findUnique({ where: { id: userId }, select: { password: true } });
-      const isMatch = await bcrypt.compare(current_password || "", currentUser.password);
-
+      const [userRows] = await db.query("SELECT password FROM users WHERE id = ? LIMIT 1", [userId]);
+      const isMatch = await bcrypt.compare(current_password || "", userRows[0].password);
       if (!isMatch) {
         return res.status(401).json({ status: "error", message: "Password saat ini salah." });
       }
 
-      updateData.password = await bcrypt.hash(new_password, 12);
+      updateFields.password = await bcrypt.hash(new_password, 12);
     }
 
-    await prisma.user.update({ where: { id: userId }, data: updateData });
+    const setClause = Object.keys(updateFields).map(k => `${k} = ?`).join(", ");
+    await db.query(`UPDATE users SET ${setClause} WHERE id = ?`, [...Object.values(updateFields), userId]);
 
     return res.json({ status: "success", message: "Profil berhasil diperbarui." });
   } catch (err) {
@@ -86,9 +75,7 @@ async function updateProfile(req, res) {
 }
 
 // =============================================================
-// POST /api/account/photo — upload foto profil
-// Menggunakan multer + Cloudinary (dikonfigurasi di route)
-// req.file.path = URL Cloudinary, req.file.filename = public_id
+// POST /api/account/photo
 // =============================================================
 async function uploadPhoto(req, res) {
   try {
@@ -98,27 +85,19 @@ async function uploadPhoto(req, res) {
       return res.status(400).json({ status: "error", message: "Tidak ada file foto yang diupload." });
     }
 
-    // URL publik Cloudinary
     const photoUrl = req.file.path;
 
-    // Hapus foto lama dari Cloudinary kalau ada
-    const currentUser = await prisma.user.findUnique({ where: { id: userId }, select: { photo: true } });
-    if (currentUser?.photo && currentUser.photo.includes("cloudinary.com")) {
-      // Ambil public_id dari URL (format: .../sss-dealer/profiles/namafile)
-      const matches = currentUser.photo.match(/sss-dealer\/profiles\/[^.]+/);
-      if (matches) {
-        await cloudinary.uploader.destroy(matches[0]).catch(() => {}); // silent fail
-      }
+    // Hapus foto lama dari Cloudinary
+    const [rows] = await db.query("SELECT photo FROM users WHERE id = ? LIMIT 1", [userId]);
+    const oldPhoto = rows[0]?.photo;
+    if (oldPhoto && oldPhoto.includes("cloudinary.com")) {
+      const matches = oldPhoto.match(/sss-dealer\/profiles\/[^.]+/);
+      if (matches) await cloudinary.uploader.destroy(matches[0]).catch(() => {});
     }
 
-    // Simpan URL baru ke DB
-    await prisma.user.update({ where: { id: userId }, data: { photo: photoUrl } });
+    await db.query("UPDATE users SET photo = ? WHERE id = ?", [photoUrl, userId]);
 
-    return res.json({
-      status: "success",
-      message: "Foto profil berhasil diperbarui.",
-      photo: photoUrl,
-    });
+    return res.json({ status: "success", message: "Foto profil berhasil diperbarui.", photo: photoUrl });
   } catch (err) {
     console.error("uploadPhoto error:", err);
     return res.status(500).json({ status: "error", message: "Gagal mengupload foto." });

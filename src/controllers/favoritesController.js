@@ -2,22 +2,28 @@
 // Favorites Controller — get, toggle, check
 // =============================================================
 
-const prisma = require("../lib/prisma");
+const db = require("../lib/db");
 
 // =============================================================
-// GET /api/favorites — ambil semua favorit milik user yang login
+// GET /api/favorites
 // =============================================================
 async function getFavorites(req, res) {
   try {
     const userId = req.user.id;
 
-    const favorites = await prisma.userFavorite.findMany({
-      where: { userId },
-      include: { car: true },
-      orderBy: { createdAt: "desc" },
-    });
+    const [rows] = await db.query(
+      `SELECT c.*, uf.created_at AS fav_created_at
+         FROM user_favorites uf
+         JOIN cars c ON c.id = uf.car_id
+        WHERE uf.user_id = ?
+        ORDER BY uf.created_at DESC`,
+      [userId]
+    );
 
-    const cars = favorites.map(f => ({ ...f.car, price: Number(f.car.price) }));
+    const cars = rows.map(r => {
+      const { fav_created_at, ...car } = r;
+      return { ...car, price: Number(car.price) };
+    });
 
     return res.json({ status: "success", data: cars });
   } catch (err) {
@@ -27,38 +33,35 @@ async function getFavorites(req, res) {
 }
 
 // =============================================================
-// POST /api/favorites/toggle — tambah atau hapus favorit
-// Body: { car_id: number }
+// POST /api/favorites/toggle
+// Body: { car_id }
 // =============================================================
 async function toggleFavorite(req, res) {
   try {
     const userId = req.user.id;
-    const carId = parseInt(req.body.car_id);
+    const carId  = parseInt(req.body.car_id);
 
     if (!carId || carId <= 0) {
       return res.status(400).json({ status: "error", message: "ID mobil tidak valid." });
     }
 
-    // Cek apakah mobil ada
-    const car = await prisma.car.findUnique({ where: { id: carId }, select: { id: true } });
-    if (!car) {
+    // Cek mobil ada
+    const [carRows] = await db.query("SELECT id FROM cars WHERE id = ? LIMIT 1", [carId]);
+    if (carRows.length === 0) {
       return res.status(404).json({ status: "error", message: "Mobil tidak ditemukan." });
     }
 
-    // Cek apakah sudah difavoritkan
-    const existing = await prisma.userFavorite.findUnique({
-      where: { userId_carId: { userId, carId } },
-    });
+    // Cek sudah difavoritkan?
+    const [existing] = await db.query(
+      "SELECT id FROM user_favorites WHERE user_id = ? AND car_id = ? LIMIT 1",
+      [userId, carId]
+    );
 
-    if (existing) {
-      // Sudah ada → hapus (unfavorite)
-      await prisma.userFavorite.delete({
-        where: { userId_carId: { userId, carId } },
-      });
+    if (existing.length > 0) {
+      await db.query("DELETE FROM user_favorites WHERE user_id = ? AND car_id = ?", [userId, carId]);
       return res.json({ status: "success", favorited: false, message: "Dihapus dari favorit." });
     } else {
-      // Belum ada → tambah
-      await prisma.userFavorite.create({ data: { userId, carId } });
+      await db.query("INSERT INTO user_favorites (user_id, car_id) VALUES (?, ?)", [userId, carId]);
       return res.json({ status: "success", favorited: true, message: "Ditambahkan ke favorit." });
     }
   } catch (err) {
@@ -68,23 +71,23 @@ async function toggleFavorite(req, res) {
 }
 
 // =============================================================
-// GET /api/favorites/check?car_id=1 — cek status favorit satu mobil
+// GET /api/favorites/check?car_id=1
 // =============================================================
 async function checkFavorite(req, res) {
   try {
     const userId = req.user.id;
-    const carId = parseInt(req.query.car_id);
+    const carId  = parseInt(req.query.car_id);
 
     if (!carId || carId <= 0) {
       return res.json({ status: "success", logged_in: true, favorited: false });
     }
 
-    const existing = await prisma.userFavorite.findUnique({
-      where: { userId_carId: { userId, carId } },
-      select: { id: true },
-    });
+    const [rows] = await db.query(
+      "SELECT id FROM user_favorites WHERE user_id = ? AND car_id = ? LIMIT 1",
+      [userId, carId]
+    );
 
-    return res.json({ status: "success", logged_in: true, favorited: !!existing });
+    return res.json({ status: "success", logged_in: true, favorited: rows.length > 0 });
   } catch (err) {
     console.error("checkFavorite error:", err);
     return res.status(500).json({ status: "error", message: "Gagal memeriksa status favorit." });

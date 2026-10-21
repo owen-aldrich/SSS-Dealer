@@ -1,40 +1,42 @@
 // =============================================================
-// Lead Controller — kelola lead (calon pembeli) — admin only
+// Lead Controller — admin only
 // =============================================================
 
-const prisma = require("../lib/prisma");
+const db = require("../lib/db");
 
 const STATUSES = ["new", "contacted", "negotiation", "closing"];
 
 function serializeLead(lead) {
   return {
-    id: lead.id,
-    name: lead.name,
-    email: lead.email,
-    phone: lead.phone,
-    car_id: lead.carId,
-    car_name: lead.car ? lead.car.name : null,
-    car_brand: lead.car ? lead.car.brand : null,
-    status: lead.status,
+    id:         lead.id,
+    name:       lead.name,
+    email:      lead.email,
+    phone:      lead.phone,
+    car_id:     lead.car_id,
+    car_name:   lead.car_name  || null,
+    car_brand:  lead.car_brand || null,
+    status:     lead.status,
     consultant: lead.consultant,
-    note: lead.note,
-    created_at: lead.createdAt,
-    updated_at: lead.updatedAt,
+    note:       lead.note,
+    created_at: lead.created_at,
+    updated_at: lead.updated_at,
   };
 }
 
 // =============================================================
-// GET /api/leads — semua lead + ringkasan per status
+// GET /api/leads
 // =============================================================
 async function listLeads(req, res) {
   try {
-    const rows = await prisma.lead.findMany({
-      orderBy: { updatedAt: "desc" },
-      include: { car: { select: { id: true, name: true, brand: true } } },
-    });
+    const [rows] = await db.query(
+      `SELECT l.*, c.name AS car_name, c.brand AS car_brand
+         FROM leads l
+         LEFT JOIN cars c ON c.id = l.car_id
+        ORDER BY l.updated_at DESC`
+    );
 
     const counts = { new: 0, contacted: 0, negotiation: 0, closing: 0 };
-    rows.forEach((l) => { if (counts[l.status] !== undefined) counts[l.status]++; });
+    rows.forEach(l => { if (counts[l.status] !== undefined) counts[l.status]++; });
 
     return res.json({ status: "success", data: rows.map(serializeLead), counts });
   } catch (err) {
@@ -44,27 +46,33 @@ async function listLeads(req, res) {
 }
 
 // =============================================================
-// POST /api/leads — tambah lead (admin)
+// POST /api/leads
 // =============================================================
 async function createLead(req, res) {
   try {
     const { name, email, phone, car_id, status, consultant, note } = req.body;
+
     if (!name || !phone) {
       return res.status(400).json({ status: "error", message: "Nama dan nomor HP wajib diisi." });
     }
-    const lead = await prisma.lead.create({
-      data: {
-        name: name.trim(),
-        email: email ? email.trim() : "",
-        phone: phone ? phone.trim() : null,
-        carId: car_id ? parseInt(car_id) : null,
-        status: STATUSES.includes(status) ? status : "new",
-        consultant: consultant || null,
-        note: note || null,
-      },
-      include: { car: { select: { id: true, name: true, brand: true } } },
-    });
-    return res.status(201).json({ status: "success", message: "Lead ditambahkan.", data: serializeLead(lead) });
+
+    const leadStatus = STATUSES.includes(status) ? status : "new";
+    const carId      = car_id ? parseInt(car_id) : null;
+
+    const [result] = await db.query(
+      `INSERT INTO leads (name, email, phone, car_id, status, consultant, note)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [name.trim(), email ? email.trim() : "", phone ? phone.trim() : null, carId, leadStatus, consultant || null, note || null]
+    );
+
+    const [rows] = await db.query(
+      `SELECT l.*, c.name AS car_name, c.brand AS car_brand
+         FROM leads l LEFT JOIN cars c ON c.id = l.car_id
+        WHERE l.id = ? LIMIT 1`,
+      [result.insertId]
+    );
+
+    return res.status(201).json({ status: "success", message: "Lead ditambahkan.", data: serializeLead(rows[0]) });
   } catch (err) {
     console.error("createLead error:", err);
     return res.status(500).json({ status: "error", message: "Gagal menambahkan lead." });
@@ -72,35 +80,45 @@ async function createLead(req, res) {
 }
 
 // =============================================================
-// PUT /api/leads/:id — ubah lead (admin)
+// PUT /api/leads/:id
 // =============================================================
 async function updateLead(req, res) {
   try {
     const id = parseInt(req.params.id);
     if (!id || id <= 0) return res.status(400).json({ status: "error", message: "ID tidak valid." });
 
-    const existing = await prisma.lead.findUnique({ where: { id }, select: { id: true } });
-    if (!existing) return res.status(404).json({ status: "error", message: "Lead tidak ditemukan." });
+    const [existing] = await db.query("SELECT id FROM leads WHERE id = ? LIMIT 1", [id]);
+    if (existing.length === 0) return res.status(404).json({ status: "error", message: "Lead tidak ditemukan." });
 
     const { name, email, phone, car_id, status, consultant, note } = req.body;
-    const data = {};
-    if (name !== undefined) data.name = name.trim();
-    if (email !== undefined) data.email = email ? email.trim() : "";
-    if (phone !== undefined) data.phone = phone ? phone.trim() : null;
-    if (car_id !== undefined) data.carId = car_id ? parseInt(car_id) : null;
+    const fields = [];
+    const values = [];
+
+    if (name       !== undefined) { fields.push("name = ?");       values.push(name.trim()); }
+    if (email      !== undefined) { fields.push("email = ?");      values.push(email ? email.trim() : ""); }
+    if (phone      !== undefined) { fields.push("phone = ?");      values.push(phone ? phone.trim() : null); }
+    if (car_id     !== undefined) { fields.push("car_id = ?");     values.push(car_id ? parseInt(car_id) : null); }
+    if (consultant !== undefined) { fields.push("consultant = ?"); values.push(consultant || null); }
+    if (note       !== undefined) { fields.push("note = ?");       values.push(note || null); }
     if (status !== undefined) {
       if (!STATUSES.includes(status)) return res.status(400).json({ status: "error", message: "Status tidak valid." });
-      data.status = status;
+      fields.push("status = ?");
+      values.push(status);
     }
-    if (consultant !== undefined) data.consultant = consultant || null;
-    if (note !== undefined) data.note = note || null;
 
-    const lead = await prisma.lead.update({
-      where: { id },
-      data,
-      include: { car: { select: { id: true, name: true, brand: true } } },
-    });
-    return res.json({ status: "success", message: "Lead diperbarui.", data: serializeLead(lead) });
+    if (fields.length === 0) return res.status(400).json({ status: "error", message: "Tidak ada data yang diperbarui." });
+
+    values.push(id);
+    await db.query(`UPDATE leads SET ${fields.join(", ")} WHERE id = ?`, values);
+
+    const [rows] = await db.query(
+      `SELECT l.*, c.name AS car_name, c.brand AS car_brand
+         FROM leads l LEFT JOIN cars c ON c.id = l.car_id
+        WHERE l.id = ? LIMIT 1`,
+      [id]
+    );
+
+    return res.json({ status: "success", message: "Lead diperbarui.", data: serializeLead(rows[0]) });
   } catch (err) {
     console.error("updateLead error:", err);
     return res.status(500).json({ status: "error", message: "Gagal memperbarui lead." });
@@ -108,17 +126,17 @@ async function updateLead(req, res) {
 }
 
 // =============================================================
-// DELETE /api/leads/:id — hapus lead (admin)
+// DELETE /api/leads/:id
 // =============================================================
 async function deleteLead(req, res) {
   try {
     const id = parseInt(req.params.id);
     if (!id || id <= 0) return res.status(400).json({ status: "error", message: "ID tidak valid." });
 
-    const existing = await prisma.lead.findUnique({ where: { id }, select: { id: true } });
-    if (!existing) return res.status(404).json({ status: "error", message: "Lead tidak ditemukan." });
+    const [existing] = await db.query("SELECT id FROM leads WHERE id = ? LIMIT 1", [id]);
+    if (existing.length === 0) return res.status(404).json({ status: "error", message: "Lead tidak ditemukan." });
 
-    await prisma.lead.delete({ where: { id } });
+    await db.query("DELETE FROM leads WHERE id = ?", [id]);
     return res.json({ status: "success", message: "Lead dihapus." });
   } catch (err) {
     console.error("deleteLead error:", err);

@@ -57,8 +57,9 @@ function renderCar(car) {
 
   document.getElementById("carImage").src = car.image;
   document.getElementById("carImage").alt = `${car.brand} ${car.name}`;
+  const statusLabel = car.status === "reserved" ? "DIPESAN" : "TERSEDIA";
   document.getElementById("carBrand").textContent =
-    `${car.brand.toUpperCase()} · 2024 · TERSEDIA`;
+    `${car.brand.toUpperCase()} · 2024 · ${statusLabel}`;
   document.getElementById("carName").textContent = car.name;
   document.getElementById("carPrice").textContent = fmtRupiah(car.price);
   document.getElementById("carDescription").textContent =
@@ -88,11 +89,27 @@ function renderCar(car) {
   );
   document.getElementById("whatsappBtn").href = `https://wa.me/${WA_NUMBER}?text=${waMsg}`;
 
-  // Tautan test drive -> halaman pemesanan
-  const tdHref = `test-drive.html?id=${car.id}`;
-  document.getElementById("testDriveBtn").href = tdHref;
-  const unitTd = document.getElementById("unitTestDriveBtn");
-  if (unitTd) unitTd.href = tdHref;
+  // Tautan test drive -> halaman pemesanan (hanya jika available)
+  const tdBtn   = document.getElementById("testDriveBtn");
+  const unitTd  = document.getElementById("unitTestDriveBtn");
+
+  if (car.status === "available") {
+    const tdHref = `test-drive.html?id=${car.id}`;
+    tdBtn.href = tdHref;
+    if (unitTd) unitTd.href = tdHref;
+  } else {
+    // Nonaktifkan tombol test drive
+    tdBtn.removeAttribute("href");
+    tdBtn.style.pointerEvents = "none";
+    tdBtn.style.opacity = "0.4";
+    tdBtn.title = "Mobil ini sedang tidak tersedia untuk test drive.";
+    if (unitTd) {
+      unitTd.removeAttribute("href");
+      unitTd.style.pointerEvents = "none";
+      unitTd.style.opacity = "0.4";
+      unitTd.title = "Mobil ini sedang tidak tersedia untuk test drive.";
+    }
+  }
 }
 
 function setText(id, value) {

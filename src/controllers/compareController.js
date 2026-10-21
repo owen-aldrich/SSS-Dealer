@@ -2,15 +2,14 @@
 // Compare Controller — add history, get history
 // =============================================================
 
-const prisma = require("../lib/prisma");
+const db = require("../lib/db");
 
 // =============================================================
-// POST /api/compare — simpan riwayat compare (hanya kalau login)
+// POST /api/compare — simpan riwayat compare
 // Body: { car_id_1, car_id_2 }
 // =============================================================
 async function addCompareHistory(req, res) {
   try {
-    // Kalau tidak login, kembalikan sukses tapi tidak disimpan
     if (!req.user) {
       return res.json({ status: "success", saved: false, message: "Tidak login, riwayat tidak disimpan." });
     }
@@ -23,9 +22,10 @@ async function addCompareHistory(req, res) {
       return res.status(400).json({ status: "error", message: "Data mobil untuk compare tidak valid." });
     }
 
-    await prisma.compareHistory.create({
-      data: { userId, carId1, carId2 },
-    });
+    await db.query(
+      "INSERT INTO compare_history (user_id, car_id_1, car_id_2) VALUES (?, ?, ?)",
+      [userId, carId1, carId2]
+    );
 
     return res.json({ status: "success", saved: true });
   } catch (err) {
@@ -41,29 +41,26 @@ async function getCompareHistory(req, res) {
   try {
     const userId = req.user.id;
 
-    const history = await prisma.compareHistory.findMany({
-      where: { userId },
-      include: {
-        car1: { select: { id: true, name: true, brand: true } },
-        car2: { select: { id: true, name: true, brand: true } },
-      },
-      orderBy: { comparedAt: "desc" },
-      take: 20,
-    });
+    const [rows] = await db.query(
+      `SELECT
+         ch.id,
+         ch.compared_at,
+         c1.id    AS car1_id,
+         c1.name  AS car1_name,
+         c1.brand AS car1_brand,
+         c2.id    AS car2_id,
+         c2.name  AS car2_name,
+         c2.brand AS car2_brand
+       FROM compare_history ch
+       JOIN cars c1 ON c1.id = ch.car_id_1
+       JOIN cars c2 ON c2.id = ch.car_id_2
+       WHERE ch.user_id = ?
+       ORDER BY ch.compared_at DESC
+       LIMIT 20`,
+      [userId]
+    );
 
-    // Format mirip PHP lama agar JS frontend tidak perlu diubah banyak
-    const data = history.map(h => ({
-      id: h.id,
-      compared_at: h.comparedAt,
-      car1_id: h.car1.id,
-      car1_name: h.car1.name,
-      car1_brand: h.car1.brand,
-      car2_id: h.car2.id,
-      car2_name: h.car2.name,
-      car2_brand: h.car2.brand,
-    }));
-
-    return res.json({ status: "success", data });
+    return res.json({ status: "success", data: rows });
   } catch (err) {
     console.error("getCompareHistory error:", err);
     return res.status(500).json({ status: "error", message: "Gagal mengambil riwayat compare." });

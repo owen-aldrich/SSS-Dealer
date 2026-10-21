@@ -3,6 +3,11 @@
 // POST /api/test-drive. ID + Rupiah. Form & confirm dalam 1 halaman.
 // =============================================================
 
+// Guard: wajib login
+if (typeof isLoggedIn === "function" && !isLoggedIn()) {
+  window.location.href = "signin.html?redirect=" + encodeURIComponent(window.location.href);
+}
+
 const params = new URLSearchParams(window.location.search);
 const preselectId = params.get("id");
 

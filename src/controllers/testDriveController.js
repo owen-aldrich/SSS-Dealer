@@ -1,50 +1,44 @@
 // =============================================================
-// Test Drive Controller — book test drive
+// Test Drive Controller
 // =============================================================
 
-const prisma = require("../lib/prisma");
+const db = require("../lib/db");
 
 // =============================================================
 // POST /api/test-drive — booking test drive
-// Bisa dilakukan tanpa login (user_id nullable)
-// Body: { car_id, name, email, phone, preferred_date, preferred_time, message }
 // =============================================================
 async function bookTestDrive(req, res) {
   try {
     const { car_id, name, email, phone, preferred_date, preferred_time, message } = req.body;
-
     const carId = parseInt(car_id);
 
-    // Validasi wajib
     if (!carId || carId <= 0 || !name || !email || !phone) {
       return res.status(400).json({ status: "error", message: "Nama, email, dan nomor telepon wajib diisi." });
     }
 
-    // Validasi format email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ status: "error", message: "Format email tidak valid." });
     }
 
-    // Cek mobil ada
-    const car = await prisma.car.findUnique({ where: { id: carId }, select: { id: true } });
-    if (!car) {
+    const [carRows] = await db.query("SELECT id, status FROM cars WHERE id = ? LIMIT 1", [carId]);
+    if (carRows.length === 0) {
       return res.status(404).json({ status: "error", message: "Mobil tidak ditemukan." });
     }
+    if (carRows[0].status !== "available") {
+      return res.status(400).json({ status: "error", message: "Mobil ini tidak tersedia untuk test drive." });
+    }
 
-    // Cek bentrok jadwal: 1 mobil tidak boleh dipesan 2x di tanggal+jam sama.
-    // Hanya hitung booking yang masih aktif (pending/approved); yang ditolak diabaikan.
+    // Cek bentrok jadwal
     if (preferred_date && preferred_time) {
-      const bentrok = await prisma.testDrive.findFirst({
-        where: {
-          carId,
-          preferredDate: new Date(preferred_date),
-          preferredTime: preferred_time,
-          status: { in: ["pending", "approved"] },
-        },
-        select: { id: true },
-      });
-      if (bentrok) {
+      const [bentrok] = await db.query(
+        `SELECT id FROM test_drives
+          WHERE car_id = ? AND preferred_date = ? AND preferred_time = ?
+            AND status IN ('pending', 'approved')
+          LIMIT 1`,
+        [carId, preferred_date, preferred_time]
+      );
+      if (bentrok.length > 0) {
         return res.status(409).json({
           status: "error",
           message: "Maaf, slot waktu ini untuk mobil tersebut sudah dipesan. Silakan pilih tanggal atau jam lain.",
@@ -52,21 +46,13 @@ async function bookTestDrive(req, res) {
       }
     }
 
-    // user_id dari JWT kalau sudah login, null kalau tidak
     const userId = req.user ? req.user.id : null;
 
-    await prisma.testDrive.create({
-      data: {
-        userId,
-        carId,
-        name,
-        email,
-        phone,
-        preferredDate: preferred_date ? new Date(preferred_date) : null,
-        preferredTime: preferred_time || null,
-        message: message || null,
-      },
-    });
+    await db.query(
+      `INSERT INTO test_drives (user_id, car_id, name, email, phone, preferred_date, preferred_time, message)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [userId, carId, name, email, phone, preferred_date || null, preferred_time || null, message || null]
+    );
 
     return res.json({
       status: "success",
@@ -80,35 +66,34 @@ async function bookTestDrive(req, res) {
 
 // =============================================================
 // GET /api/test-drive/me — riwayat test drive milik user login
-// Butuh auth (requireAuth). Join data mobil untuk tampilan.
 // =============================================================
 async function myTestDrives(req, res) {
   try {
     const userId = req.user.id;
 
-    const rows = await prisma.testDrive.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-      include: {
-        car: { select: { id: true, name: true, brand: true, image: true } },
-      },
-    });
+    const [rows] = await db.query(
+      `SELECT td.*, c.name AS car_name, c.brand AS car_brand, c.image AS car_image
+         FROM test_drives td
+         LEFT JOIN cars c ON c.id = td.car_id
+        WHERE td.user_id = ?
+        ORDER BY td.created_at DESC`,
+      [userId]
+    );
 
-    const data = rows.map((td) => ({
-      id: td.id,
-      car_id: td.carId,
-      car_name: td.car ? td.car.name : null,
-      car_brand: td.car ? td.car.brand : null,
-      car_image: td.car ? td.car.image : null,
-      name: td.name,
-      email: td.email,
-      phone: td.phone,
-      preferred_date: td.preferredDate,
-      preferred_time: td.preferredTime,
-      message: td.message,
-      created_at: td.createdAt,
-      // Schema belum punya kolom status; default statis sampai Phase admin.
-      status: "Menunggu konfirmasi",
+    const data = rows.map(td => ({
+      id:             td.id,
+      car_id:         td.car_id,
+      car_name:       td.car_name,
+      car_brand:      td.car_brand,
+      car_image:      td.car_image,
+      name:           td.name,
+      email:          td.email,
+      phone:          td.phone,
+      preferred_date: td.preferred_date,
+      preferred_time: td.preferred_time,
+      message:        td.message,
+      created_at:     td.created_at,
+      status:         td.status || "pending",
     }));
 
     return res.json({ status: "success", data });
@@ -119,28 +104,30 @@ async function myTestDrives(req, res) {
 }
 
 // =============================================================
-// GET /api/test-drive — semua booking (admin). Join car.
+// GET /api/test-drive — semua booking (admin)
 // =============================================================
 async function listTestDrives(req, res) {
   try {
-    const rows = await prisma.testDrive.findMany({
-      orderBy: { createdAt: "desc" },
-      include: { car: { select: { id: true, name: true, brand: true, image: true } } },
-    });
+    const [rows] = await db.query(
+      `SELECT td.*, c.name AS car_name, c.brand AS car_brand, c.image AS car_image
+         FROM test_drives td
+         LEFT JOIN cars c ON c.id = td.car_id
+        ORDER BY td.created_at DESC`
+    );
 
-    const data = rows.map((td) => ({
-      id: td.id,
-      car_id: td.carId,
-      car_name: td.car ? td.car.name : null,
-      car_brand: td.car ? td.car.brand : null,
-      name: td.name,
-      email: td.email,
-      phone: td.phone,
-      preferred_date: td.preferredDate,
-      preferred_time: td.preferredTime,
-      message: td.message,
-      status: td.status,
-      created_at: td.createdAt,
+    const data = rows.map(td => ({
+      id:             td.id,
+      car_id:         td.car_id,
+      car_name:       td.car_name,
+      car_brand:      td.car_brand,
+      name:           td.name,
+      email:          td.email,
+      phone:          td.phone,
+      preferred_date: td.preferred_date,
+      preferred_time: td.preferred_time,
+      message:        td.message,
+      status:         td.status,
+      created_at:     td.created_at,
     }));
 
     return res.json({ status: "success", data });
@@ -151,31 +138,40 @@ async function listTestDrives(req, res) {
 }
 
 // =============================================================
-// PATCH /api/test-drive/:id — update status / jadwal (admin)
-// Body: { status?, preferred_date?, preferred_time? }
+// PATCH /api/test-drive/:id — update status (admin)
 // =============================================================
 async function updateTestDrive(req, res) {
   try {
     const id = parseInt(req.params.id);
     if (!id || id <= 0) return res.status(400).json({ status: "error", message: "ID tidak valid." });
 
-    const existing = await prisma.testDrive.findUnique({ where: { id }, select: { id: true } });
-    if (!existing) return res.status(404).json({ status: "error", message: "Data test drive tidak ditemukan." });
+    const [existing] = await db.query("SELECT id FROM test_drives WHERE id = ? LIMIT 1", [id]);
+    if (existing.length === 0) return res.status(404).json({ status: "error", message: "Data test drive tidak ditemukan." });
 
     const { status, preferred_date, preferred_time } = req.body;
-    const data = {};
+    const fields = [];
+    const values = [];
+
     if (status !== undefined) {
       const allowed = ["pending", "approved", "rejected"];
       if (!allowed.includes(status)) {
         return res.status(400).json({ status: "error", message: "Status tidak valid." });
       }
-      data.status = status;
+      fields.push("status = ?");
+      values.push(status);
     }
-    if (preferred_date !== undefined) data.preferredDate = preferred_date ? new Date(preferred_date) : null;
-    if (preferred_time !== undefined) data.preferredTime = preferred_time || null;
+    if (preferred_date !== undefined) { fields.push("preferred_date = ?"); values.push(preferred_date || null); }
+    if (preferred_time !== undefined) { fields.push("preferred_time = ?"); values.push(preferred_time || null); }
 
-    const td = await prisma.testDrive.update({ where: { id }, data });
-    return res.json({ status: "success", message: "Test drive diperbarui.", data: { id: td.id, status: td.status } });
+    if (fields.length === 0) {
+      return res.status(400).json({ status: "error", message: "Tidak ada data yang diperbarui." });
+    }
+
+    values.push(id);
+    await db.query(`UPDATE test_drives SET ${fields.join(", ")} WHERE id = ?`, values);
+
+    const [rows] = await db.query("SELECT id, status FROM test_drives WHERE id = ? LIMIT 1", [id]);
+    return res.json({ status: "success", message: "Test drive diperbarui.", data: rows[0] });
   } catch (err) {
     console.error("updateTestDrive error:", err);
     return res.status(500).json({ status: "error", message: "Gagal memperbarui test drive." });
@@ -184,30 +180,24 @@ async function updateTestDrive(req, res) {
 
 // =============================================================
 // GET /api/test-drive/booked-slots?car_id=X&date=YYYY-MM-DD
-// Return daftar jam yang sudah terisi (pending/approved) untuk
-// mobil + tanggal tertentu. Dipakai frontend untuk disable tombol slot.
 // =============================================================
 async function bookedSlots(req, res) {
   try {
     const carId = parseInt(req.query.car_id);
-    const date  = req.query.date; // format: YYYY-MM-DD
+    const date  = req.query.date;
 
     if (!carId || carId <= 0 || !date) {
       return res.json({ status: "success", booked: [] });
     }
 
-    const rows = await prisma.testDrive.findMany({
-      where: {
-        carId,
-        preferredDate: new Date(date),
-        status: { in: ["pending", "approved"] },
-        preferredTime: { not: null },
-      },
-      select: { preferredTime: true },
-    });
+    const [rows] = await db.query(
+      `SELECT preferred_time FROM test_drives
+        WHERE car_id = ? AND preferred_date = ? AND status IN ('pending', 'approved')
+          AND preferred_time IS NOT NULL`,
+      [carId, date]
+    );
 
-    const booked = rows.map((r) => r.preferredTime);
-    return res.json({ status: "success", booked });
+    return res.json({ status: "success", booked: rows.map(r => r.preferred_time) });
   } catch (err) {
     console.error("bookedSlots error:", err);
     return res.status(500).json({ status: "error", booked: [] });

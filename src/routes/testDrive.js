@@ -20,7 +20,7 @@ router.get("/", requireAuth, requireAdmin, listTestDrives);
 // PATCH /api/test-drive/:id — update status/jadwal (admin)
 router.patch("/:id", requireAuth, requireAdmin, updateTestDrive);
 
-// POST /api/test-drive — booking (login opsional)
-router.post("/", optionalAuth, bookTestDrive);
+// POST /api/test-drive — booking (wajib login)
+router.post("/", requireAuth, bookTestDrive);
 
 module.exports = router;

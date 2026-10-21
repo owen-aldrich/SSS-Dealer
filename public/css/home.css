@@ -387,6 +387,15 @@
     color: var(--color-champagne);
 }
 
+.v-card .avail-badge.reserved {
+    color: #fff;
+    background-color: rgba(180, 120, 0, 0.85);
+}
+
+.v-card.reserved-card .v-visual img {
+    opacity: 0.6;
+}
+
 .v-card .v-info {
     display: flex;
     flex-direction: column;

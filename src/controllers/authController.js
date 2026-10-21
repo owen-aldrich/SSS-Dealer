@@ -3,8 +3,8 @@
 // =============================================================
 
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const prisma = require("../lib/prisma");
+const jwt    = require("jsonwebtoken");
+const db     = require("../lib/db");
 
 // Helper: buat JWT token
 function signToken(user) {
@@ -15,7 +15,7 @@ function signToken(user) {
   );
 }
 
-// Helper: format user untuk response (buang password)
+// Helper: buang password dari response
 function safeUser(user) {
   const { password, ...rest } = user;
   return rest;
@@ -28,56 +28,40 @@ async function signup(req, res) {
   try {
     const { fullname, email, username, password, confirm_password, age, address } = req.body;
 
-    // Validasi wajib
     if (!fullname || !email || !username || !password) {
       return res.status(400).json({ status: "error", message: "Nama lengkap, email, username, dan password wajib diisi." });
     }
 
-    // Validasi format email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ status: "error", message: "Format email tidak valid." });
     }
 
-    // Validasi panjang password
     if (password.length < 6) {
       return res.status(400).json({ status: "error", message: "Password minimal 6 karakter." });
     }
 
-    // Validasi konfirmasi password
     if (confirm_password && password !== confirm_password) {
       return res.status(400).json({ status: "error", message: "Konfirmasi password tidak cocok." });
     }
 
     // Cek duplikat email atau username
-    const existing = await prisma.user.findFirst({
-      where: { OR: [{ email }, { username }] },
-    });
-
-    if (existing) {
+    const [rows] = await db.query(
+      "SELECT id FROM users WHERE email = ? OR username = ? LIMIT 1",
+      [email, username]
+    );
+    if (rows.length > 0) {
       return res.status(409).json({ status: "error", message: "Email atau username sudah terdaftar." });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Buat user baru
-    const user = await prisma.user.create({
-      data: {
-        fullname,
-        email,
-        username,
-        password: hashedPassword,
-        age: age ? parseInt(age) : null,
-        address: address || null,
-        role: "user",
-      },
-    });
+    await db.query(
+      "INSERT INTO users (fullname, email, username, password, age, address, role) VALUES (?, ?, ?, ?, ?, ?, 'user')",
+      [fullname, email, username, hashedPassword, age ? parseInt(age) : null, address || null]
+    );
 
-    return res.status(201).json({
-      status: "success",
-      message: "Pendaftaran berhasil! Silakan login.",
-    });
+    return res.status(201).json({ status: "success", message: "Pendaftaran berhasil! Silakan login." });
   } catch (err) {
     console.error("signup error:", err);
     return res.status(500).json({ status: "error", message: "Gagal mendaftar. Coba lagi." });
@@ -95,11 +79,12 @@ async function signin(req, res) {
       return res.status(400).json({ status: "error", message: "Email/username dan password wajib diisi." });
     }
 
-    // Cari user berdasarkan email ATAU username
-    const user = await prisma.user.findFirst({
-      where: { OR: [{ email: identifier }, { username: identifier }] },
-    });
+    const [rows] = await db.query(
+      "SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1",
+      [identifier, identifier]
+    );
 
+    const user = rows[0];
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ status: "error", message: "Email/username atau password salah." });
     }
@@ -120,31 +105,24 @@ async function signin(req, res) {
 
 // =============================================================
 // POST /api/auth/logout
-// (JWT stateless — client harus hapus token sendiri)
 // =============================================================
 function logout(req, res) {
   return res.json({ status: "success", message: "Logout berhasil." });
 }
 
 // =============================================================
-// GET /api/auth/me — cek session (verifikasi token + ambil data user terbaru)
+// GET /api/auth/me
 // =============================================================
 async function me(req, res) {
   try {
-    // req.user sudah diisi oleh requireAuth middleware
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
-    });
+    const [rows] = await db.query("SELECT * FROM users WHERE id = ? LIMIT 1", [req.user.id]);
+    const user = rows[0];
 
     if (!user) {
       return res.status(401).json({ status: "success", logged_in: false });
     }
 
-    return res.json({
-      status: "success",
-      logged_in: true,
-      user: safeUser(user),
-    });
+    return res.json({ status: "success", logged_in: true, user: safeUser(user) });
   } catch (err) {
     console.error("me error:", err);
     return res.status(500).json({ status: "error", message: "Gagal mengambil data user." });
@@ -152,7 +130,7 @@ async function me(req, res) {
 }
 
 // =============================================================
-// POST /api/auth/check-identifier — cek apakah email/username sudah ada
+// POST /api/auth/check-identifier
 // =============================================================
 async function checkIdentifier(req, res) {
   try {
@@ -162,12 +140,12 @@ async function checkIdentifier(req, res) {
       return res.status(400).json({ status: "error", exists: false, message: "Username atau email wajib diisi." });
     }
 
-    const user = await prisma.user.findFirst({
-      where: { OR: [{ email: identifier }, { username: identifier }] },
-      select: { id: true },
-    });
+    const [rows] = await db.query(
+      "SELECT id FROM users WHERE email = ? OR username = ? LIMIT 1",
+      [identifier, identifier]
+    );
 
-    return res.json({ exists: !!user });
+    return res.json({ exists: rows.length > 0 });
   } catch (err) {
     console.error("checkIdentifier error:", err);
     return res.status(500).json({ status: "error", message: "Gagal memeriksa identifier." });

@@ -4,36 +4,23 @@
   "description": "SSS+Dealer — Luxury Car Dealership Platform",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy",
-    "db:push": "prisma db push",
-    "db:studio": "prisma studio",
-    "db:seed": "node prisma/seed.js"
+    "start":    "node src/server.js",
+    "dev":      "nodemon src/server.js",
+    "db:init":  "node database/schema-init.js",
+    "db:seed":  "node database/seed.js"
   },
   "dependencies": {
-    "@prisma/client": "6.6.0",
-    "bcryptjs": "2.4.3",
-    "cloudinary": "1.41.3",
-    "cors": "2.8.5",
-    "dotenv": "16.4.7",
-    "express": "4.21.2",
-    "jsonwebtoken": "9.0.2",
-    "multer": "^2.0.1",
-    "multer-storage-cloudinary": "4.0.0"
+    "bcryptjs":                 "2.4.3",
+    "cloudinary":               "1.41.3",
+    "cors":                     "2.8.5",
+    "dotenv":                   "16.4.7",
+    "express":                  "4.21.2",
+    "jsonwebtoken":             "9.0.2",
+    "multer":                   "^2.0.1",
+    "multer-storage-cloudinary": "4.0.0",
+    "mysql2":                   "3.11.3"
   },
   "devDependencies": {
-    "nodemon": "3.1.9",
-    "prisma": "6.6.0"
-  },
-  "allowScripts": {
-    "@prisma/client@6.6.0": true,
-    "prisma@6.6.0": true,
-    "@prisma/engines@6.6.0": true,
-    "esbuild@0.28.2": true
-  },
-  "prisma": {
-    "seed": "node prisma/seed.js"
+    "nodemon": "3.1.9"
   }
 }
