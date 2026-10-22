@@ -251,7 +251,7 @@ Untuk perubahan kecil (tambah kolom, dll) — jalankan langsung di TiDB Cloud Co
 ### Compare
 | Method | Endpoint      | Auth     | Deskripsi              |
 |--------|---------------|----------|------------------------|
-| POST   | /api/compare  | opsional | Simpan riwayat compare |
+| POST   | /api/compare  | ✓        | Simpan riwayat compare |
 | GET    | /api/compare  | ✓        | Ambil riwayat compare  |
 
 ### Account
