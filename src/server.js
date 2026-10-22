@@ -1,6 +1,6 @@
 // =============================================================
 // SSS+Dealer — Express Server
-// Backend: Node.js + Express + Prisma + PostgreSQL (Neon)
+// Backend: Node.js + Express + MySQL/TiDB (mysql2)
 // =============================================================
 
 const { PUBLIC_DIR, UPLOADS_DIR, ENV_FILE } = require("./config/paths");
@@ -37,7 +37,7 @@ app.use(
 // =============================================================
 // STATIC FILES
 // Hanya folder public/ yang dilayani ke browser — kode backend
-// (src/), schema (prisma/), dan .env TIDAK bisa diakses dari luar.
+// (src/), schema database (database/), dan .env TIDAK bisa diakses dari luar.
 // =============================================================
 app.use(express.static(PUBLIC_DIR));
 
