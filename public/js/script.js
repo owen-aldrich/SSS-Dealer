@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function buildCarCard(car) {
         const formattedPrice = Number(car.price).toLocaleString("id-ID");
         const year = car.year || 2024;
+        const compareList = JSON.parse(localStorage.getItem("compareList") || "[]").map(String);
+        const inCompare = compareList.includes(String(car.id));
         const specBits = [car.type, car.horsepower ? car.horsepower + " PS" : null, car.accel0100 ? car.accel0100 + " (0–100)" : null]
             .filter(Boolean)
             .join(" · ");
@@ -29,12 +31,50 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="v-price">Rp ${formattedPrice}</p>
                 <hr class="hr-hair">
                 <div class="v-actions">
-                    <span class="v-compare"><img src="images/icons/square.svg" alt="">Bandingkan</span>
+                    <button class="v-compare quick-compare-btn${inCompare ? " active" : ""}" data-id="${car.id}" type="button">
+                        <img src="images/icons/${inCompare ? "square-check" : "square"}.svg" alt="">
+                        ${inCompare ? "Dibandingkan" : "Bandingkan"}
+                    </button>
                     <a href="car-detail.html?id=${car.id}" class="v-detail">Lihat detail ↗</a>
                 </div>
             </div>
         `;
         return article;
+    }
+
+    /* --------------------------------------------------
+       Perbandingan dari kartu home (maksimal 2 mobil)
+    -------------------------------------------------- */
+    function bindCompareButtons(container) {
+        if (!container || container.dataset.compareBound === "true") return;
+        container.dataset.compareBound = "true";
+
+        container.addEventListener("click", (event) => {
+            const button = event.target.closest(".quick-compare-btn");
+            if (!button || !container.contains(button)) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const carId = String(button.dataset.id);
+            let list = JSON.parse(localStorage.getItem("compareList") || "[]").map(String);
+
+            if (list.includes(carId)) {
+                list = list.filter(id => id !== carId);
+            } else {
+                if (list.length >= 2) {
+                    alert("Bandingkan maksimal 2 mobil. Hapus salah satu untuk menambah yang lain.");
+                    return;
+                }
+                list.push(carId);
+            }
+
+            localStorage.setItem("compareList", JSON.stringify(list));
+            const selected = list.includes(carId);
+            button.classList.toggle("active", selected);
+            button.querySelector("img").src = `images/icons/${selected ? "square-check" : "square"}.svg`;
+            button.lastChild.textContent = selected ? " Dibandingkan" : " Bandingkan";
+        });
     }
 
     // ── Featured Cars ──────────────────────────────
@@ -44,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const favReady = FavStore.load();
 
     if (carContainer) {
+        bindCompareButtons(carContainer);
         Promise.all([fetch("/api/cars").then(res => res.json()), favReady])
             .then(([result]) => {
                 if (result.status === "success" && result.data.length > 0) {
@@ -64,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (recentlyViewed.length > 0 && recentSection && recentGrid) {
         recentSection.style.display = "block";
+        bindCompareButtons(recentGrid);
         favReady.then(() => {
             recentGrid.innerHTML = "";
             recentlyViewed.forEach(car => {
