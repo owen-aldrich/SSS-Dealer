@@ -3,7 +3,7 @@
 // Jalankan: npm run db:init
 // =============================================================
 
-require("dotenv").config({ path: require("path").join(__dirname, "../.env") });
+require("../src/config/env").loadEnv();
 
 const mysql = require("mysql2/promise");
 const fs    = require("fs");

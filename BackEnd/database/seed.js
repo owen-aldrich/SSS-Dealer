@@ -4,8 +4,8 @@
 // Jalankan: npm run db:seed
 // =============================================================
 
-require("dotenv").config({ path: require("path").join(__dirname, "../.env") });
-// database/seed.js — data awal database melalui mysql2
+require("../src/config/env").loadEnv();
+// BackEnd/database/seed.js — data awal database melalui mysql2
 
 const mysql = require("mysql2/promise");
 

@@ -1,12 +1,6 @@
--- =============================================================
--- SSS+Dealer — MySQL / TiDB Cloud Schema
--- Jalankan via: npm run db:init
--- Tidak perlu CREATE DATABASE — koneksi sudah mengarah ke DB_NAME
--- =============================================================
+-- Struktur database. Jalankan dengan npm run db:init.
 
--- =============================================================
--- USERS
--- =============================================================
+-- Akun pengguna dan admin
 CREATE TABLE IF NOT EXISTS `users` (
   `id`         INT           NOT NULL AUTO_INCREMENT,
   `fullname`   VARCHAR(100)  NOT NULL,
@@ -23,9 +17,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `uq_users_username` (`username`)
 );
 
--- =============================================================
--- CARS
--- =============================================================
+-- Data mobil
 CREATE TABLE IF NOT EXISTS `cars` (
   `id`           INT            NOT NULL AUTO_INCREMENT,
   `name`         VARCHAR(100)   NOT NULL,
@@ -48,9 +40,7 @@ CREATE TABLE IF NOT EXISTS `cars` (
   PRIMARY KEY (`id`)
 );
 
--- =============================================================
--- USER FAVORITES
--- =============================================================
+-- Mobil favorit pengguna
 CREATE TABLE IF NOT EXISTS `user_favorites` (
   `id`         INT      NOT NULL AUTO_INCREMENT,
   `user_id`    INT      NOT NULL,
@@ -62,9 +52,7 @@ CREATE TABLE IF NOT EXISTS `user_favorites` (
   CONSTRAINT `fk_fav_car`  FOREIGN KEY (`car_id`)  REFERENCES `cars`  (`id`) ON DELETE CASCADE
 );
 
--- =============================================================
--- COMPARE HISTORY
--- =============================================================
+-- Riwayat perbandingan mobil
 CREATE TABLE IF NOT EXISTS `compare_history` (
   `id`          INT      NOT NULL AUTO_INCREMENT,
   `user_id`     INT      NOT NULL,
@@ -77,9 +65,7 @@ CREATE TABLE IF NOT EXISTS `compare_history` (
   CONSTRAINT `fk_cmp_car2` FOREIGN KEY (`car_id_2`) REFERENCES `cars`  (`id`) ON DELETE CASCADE
 );
 
--- =============================================================
--- TEST DRIVES
--- =============================================================
+-- Booking test drive
 CREATE TABLE IF NOT EXISTS `test_drives` (
   `id`             INT          NOT NULL AUTO_INCREMENT,
   `user_id`        INT          NULL,
@@ -97,9 +83,7 @@ CREATE TABLE IF NOT EXISTS `test_drives` (
   CONSTRAINT `fk_td_car`  FOREIGN KEY (`car_id`)  REFERENCES `cars`  (`id`) ON DELETE CASCADE
 );
 
--- =============================================================
--- LEADS
--- =============================================================
+-- Data calon pelanggan
 CREATE TABLE IF NOT EXISTS `leads` (
   `id`         INT          NOT NULL AUTO_INCREMENT,
   `name`       VARCHAR(100) NOT NULL,

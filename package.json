@@ -1,26 +1,18 @@
 {
   "name": "sss-dealer",
   "version": "2.0.0",
-  "description": "SSS+Dealer — Luxury Car Dealership Platform",
-  "main": "src/server.js",
+  "description": "SSS+Dealer — separate frontend and backend",
+  "private": true,
+  "workspaces": ["FrontEnd", "BackEnd"],
+  "engines": { "node": ">=22" },
   "scripts": {
-    "start":    "node src/server.js",
-    "dev":      "nodemon src/server.js",
-    "db:init":  "node database/schema-init.js",
-    "db:seed":  "node database/seed.js"
-  },
-  "dependencies": {
-    "bcryptjs":                 "2.4.3",
-    "cloudinary":               "1.41.3",
-    "cors":                     "2.8.5",
-    "dotenv":                   "16.4.7",
-    "express":                  "4.21.2",
-    "jsonwebtoken":             "9.0.2",
-    "multer":                   "^2.0.1",
-    "multer-storage-cloudinary": "4.0.0",
-    "mysql2":                   "3.11.3"
-  },
-  "devDependencies": {
-    "nodemon": "3.1.9"
+    "start": "node BackEnd/scripts/start.js",
+    "dev": "node BackEnd/scripts/start.js --watch",
+    "start:frontend": "npm start --workspace=@sss-dealer/frontend",
+    "start:backend": "npm start --workspace=@sss-dealer/backend",
+    "db:init": "npm run db:init --workspace=@sss-dealer/backend",
+    "db:seed": "npm run db:seed --workspace=@sss-dealer/backend",
+    "check": "node BackEnd/scripts/check.js",
+    "test": "node --test BackEnd/tests/*.test.js"
   }
 }
